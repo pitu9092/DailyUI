@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daily UI #017 — Purchase Receipt</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #080c14;
+      --surface: rgba(15, 23, 42, 0.8);
+      --glass: rgba(255,255,255,0.04);
+      --border: rgba(255,255,255,0.08);
+      --accent: #00e5a0;
+      --accent2: #7c3aed;
+      --text: #f1f5f9;
+      --muted: #64748b;
+      --dim: #334155;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Animated bg blobs */
+    body::before, body::after {
+      content: '';
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: 0.18;
+      animation: floatBlob 8s ease-in-out infinite alternate;
+      pointer-events: none;
+    }
+    body::before {
+      width: 500px; height: 500px;
+      background: var(--accent2);
+      top: -100px; left: -100px;
+    }
+    body::after {
+      width: 400px; height: 400px;
+      background: var(--accent);
+      bottom: -80px; right: -80px;
+      animation-delay: -4s;
+    }
+    @keyframes floatBlob {
+      from { transform: translate(0,0) scale(1); }
+      to   { transform: translate(40px, 30px) scale(1.1); }
+    }
+
+    .scene {
+      display: flex;
+      gap: 48px;
+      align-items: flex-start;
+      max-width: 900px;
+      width: 100%;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── RECEIPT CARD ── */
+    .receipt {
+      width: 360px;
+      flex-shrink: 0;
+      background: var(--surface);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(0,229,160,0.06) inset;
+      animation: fadeUp 0.6s ease both;
+    }
+    @keyframes fadeUp {
+      from { opacity:0; transform: translateY(30px); }
+      to   { opacity:1; transform: translateY(0); }
+    }
+
+    /* Top accent bar */
+    .receipt-header {
+      background: linear-gradient(135deg, #00e5a0 0%, #0ea5e9 50%, #7c3aed 100%);
+      padding: 28px 28px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .receipt-header::after {
+      content: '';
+      position: absolute;
+      bottom: -1px; left: 0; right: 0; height: 12px;
+      background: var(--bg);
+      border-radius: 12px 12px 0 0;
+      clip-path: none;
+    }
+    /* Zigzag cut effect */
+    .receipt-header::before {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0; height: 16px;
+      background: var(--surface);
+      mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='16'%3E%3Cpolygon points='0,16 10,0 20,16' fill='black'/%3E%3C/svg%3E");
+      mask-repeat: repeat-x;
+      mask-size: 20px 16px;
+      -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='16'%3E%3Cpolygon points='0,16 10,0 20,16' fill='black'/%3E%3C/svg%3E");
+      -webkit-mask-repeat: repeat-x;
+      -webkit-mask-size: 20px 16px;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .brand-icon {
+      width: 36px; height: 36px;
+      background: rgba(0,0,0,0.25);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+    }
+    .brand-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: 0.5px;
+    }
+    .brand-tagline { font-size: 0.7rem; color: rgba(255,255,255,0.65); margin-top: 1px; }
+
+    .receipt-title {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.6);
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      margin-bottom: 4px;
+    }
+    .receipt-order {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .receipt-body {
+      padding: 24px 28px;
+    }
+
+    .meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px dashed var(--dim);
+    }
+    .meta-item { text-align: center; }
+    .meta-label {
+      font-size: 0.65rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 4px;
+      font-family: 'Space Mono', monospace;
+    }
+    .meta-value {
+      font-size: 0.85rem;
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    /* Items */
+    .items-list { margin-bottom: 20px; }
+    .item {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--glass);
+      animation: fadeUp 0.5s ease both;
+    }
+    .item:nth-child(1) { animation-delay: 0.1s; }
+    .item:nth-child(2) { animation-delay: 0.2s; }
+    .item:nth-child(3) { animation-delay: 0.3s; }
+    .item:nth-child(4) { animation-delay: 0.4s; }
+
+    .item-left { display: flex; gap: 12px; align-items: flex-start; }
+    .item-qty {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--accent);
+      background: rgba(0,229,160,0.08);
+      border: 1px solid rgba(0,229,160,0.2);
+      border-radius: 6px;
+      padding: 2px 7px;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+    .item-name {
+      font-size: 0.88rem;
+      color: var(--text);
+      font-weight: 500;
+    }
+    .item-sub {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+    .item-price {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.88rem;
+      color: var(--text);
+      white-space: nowrap;
+    }
+
+    /* Totals */
+    .totals {
+      background: var(--glass);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin-bottom: 20px;
+    }
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 5px 0;
+    }
+    .total-label {
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-family: 'Space Mono', monospace;
+    }
+    .total-value {
+      font-size: 0.82rem;
+      color: var(--text);
+      font-family: 'Space Mono', monospace;
+    }
+    .total-row.grand {
+      border-top: 1px solid var(--border);
+      margin-top: 8px;
+      padding-top: 10px;
+    }
+    .total-row.grand .total-label { color: var(--text); font-size: 0.9rem; font-weight: 700; }
+    .total-row.grand .total-value {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    /* Payment method */
+    .payment-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .payment-label {
+      font-size: 0.72rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-family: 'Space Mono', monospace;
+    }
+    .payment-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--glass);
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      padding: 6px 14px;
+    }
+    .card-icon { font-size: 1rem; }
+    .card-num {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text);
+    }
+
+    /* Divider with holes */
+    .perforation {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin: 0 -28px 20px;
+      position: relative;
+    }
+    .perf-hole {
+      width: 24px; height: 24px;
+      background: var(--bg);
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .perf-line {
+      flex: 1;
+      border-top: 2px dashed var(--dim);
+    }
+
+    /* QR + footer */
+    .receipt-footer {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .qr-block {
+      width: 72px; height: 72px;
+      background: white;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px;
+      flex-shrink: 0;
+    }
+    .qr-block svg { width: 100%; height: 100%; }
+    .footer-text { flex: 1; }
+    .footer-thanks {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .footer-addr {
+      font-size: 0.7rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    .tracking-num {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--accent);
+      margin-top: 6px;
+      letter-spacing: 1px;
+    }
+
+    /* ── RIGHT PANEL ── */
+    .side-panel {
+      flex: 1;
+      animation: fadeUp 0.7s ease 0.2s both;
+    }
+    .day-badge {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .day-badge::before {
+      content: '';
+      display: inline-block;
+      width: 20px; height: 2px;
+      background: var(--accent);
+      border-radius: 2px;
+    }
+
+    .panel-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 2.4rem;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+    .panel-title span {
+      background: linear-gradient(90deg, var(--accent), #0ea5e9);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .panel-desc {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 28px;
+    }
+
+    .status-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+    .pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 50px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      border: 1px solid;
+    }
+    .pill.success {
+      background: rgba(0,229,160,0.08);
+      color: var(--accent);
+      border-color: rgba(0,229,160,0.25);
+    }
+    .pill.info {
+      background: rgba(14,165,233,0.08);
+      color: #38bdf8;
+      border-color: rgba(14,165,233,0.25);
+    }
+    .pill.purple {
+      background: rgba(124,58,237,0.08);
+      color: #a78bfa;
+      border-color: rgba(124,58,237,0.25);
+    }
+    .pill-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .action-btns {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.25s ease;
+      text-decoration: none;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), #0ea5e9);
+      color: #080c14;
+    }
+    .btn-primary:hover { opacity: 0.85; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,229,160,0.3); }
+    .btn-ghost {
+      background: var(--glass);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover { background: var(--border); transform: translateY(-2px); }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 0.8rem;
+      text-decoration: none;
+      margin-bottom: 32px;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--text); }
+
+    /* ── TOAST notification ── */
+    .toast {
+      position: fixed;
+      bottom: 32px;
+      right: 32px;
+      background: var(--surface);
+      border: 1px solid rgba(0,229,160,0.3);
+      border-radius: 14px;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--text);
+      font-size: 0.85rem;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.4s ease;
+      z-index: 999;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast-icon { font-size: 1.2rem; }
+
+    @media (max-width: 700px) {
+      .scene { flex-direction: column; align-items: center; }
+      .receipt { width: 100%; max-width: 360px; }
+      .side-panel { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="scene">
+
+    <!-- RECEIPT CARD -->
+    <div class="receipt">
+      <div class="receipt-header">
+        <div class="brand-logo">
+          <div class="brand-icon">☕</div>
+          <div>
+            <div class="brand-name">Nocturnal Brew</div>
+            <div class="brand-tagline">Specialty Coffee & Kitchen</div>
+          </div>
+        </div>
+        <div class="receipt-title">Purchase Receipt</div>
+        <div class="receipt-order">#NB-48521</div>
+      </div>
+
+      <div class="receipt-body">
+
+        <!-- Meta row -->
+        <div class="meta-row">
+          <div class="meta-item">
+            <div class="meta-label">Date</div>
+            <div class="meta-value">Jul 13, 2026</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">Time</div>
+            <div class="meta-value">10:42 AM</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">Type</div>
+            <div class="meta-value">Dine-in</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">Table</div>
+            <div class="meta-value">#07</div>
+          </div>
+        </div>
+
+        <!-- Items -->
+        <div class="items-list">
+          <div class="item">
+            <div class="item-left">
+              <div class="item-qty">1×</div>
+              <div>
+                <div class="item-name">Vanilla Oat Latte</div>
+                <div class="item-sub">Large · Oat Milk · Extra Hot</div>
+              </div>
+            </div>
+            <div class="item-price">$7.50</div>
+          </div>
+          <div class="item">
+            <div class="item-left">
+              <div class="item-qty">1×</div>
+              <div>
+                <div class="item-name">Avocado Toast</div>
+                <div class="item-sub">Sourdough · Chilli Flakes</div>
+              </div>
+            </div>
+            <div class="item-price">$12.00</div>
+          </div>
+          <div class="item">
+            <div class="item-left">
+              <div class="item-qty">1×</div>
+              <div>
+                <div class="item-name">Cold Brew</div>
+                <div class="item-sub">Medium · Black</div>
+              </div>
+            </div>
+            <div class="item-price">$5.25</div>
+          </div>
+          <div class="item">
+            <div class="item-left">
+              <div class="item-qty">2×</div>
+              <div>
+                <div class="item-name">Almond Croissant</div>
+                <div class="item-sub">Freshly Baked</div>
+              </div>
+            </div>
+            <div class="item-price">$9.00</div>
+          </div>
+        </div>
+
+        <!-- Totals -->
+        <div class="totals">
+          <div class="total-row">
+            <span class="total-label">Subtotal</span>
+            <span class="total-value">$33.75</span>
+          </div>
+          <div class="total-row">
+            <span class="total-label">Tax (8.875%)</span>
+            <span class="total-value">$3.00</span>
+          </div>
+          <div class="total-row">
+            <span class="total-label">Service (5%)</span>
+            <span class="total-value">$1.69</span>
+          </div>
+          <div class="total-row grand">
+            <span class="total-label">TOTAL PAID</span>
+            <span class="total-value">$38.44</span>
+          </div>
+        </div>
+
+        <!-- Payment -->
+        <div class="payment-row">
+          <span class="payment-label">Paid via</span>
+          <div class="payment-badge">
+            <span class="card-icon">💳</span>
+            <span class="card-num">•••• •••• •••• 4291</span>
+          </div>
+        </div>
+
+        <!-- Perforation -->
+        <div class="perforation">
+          <div class="perf-hole"></div>
+          <div class="perf-line"></div>
+          <div class="perf-hole"></div>
+        </div>
+
+        <!-- Footer with QR -->
+        <div class="receipt-footer">
+          <!-- Simple SVG QR pattern -->
+          <div class="qr-block">
+            <svg viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="0" y="0" width="7" height="7" rx="1" fill="#000"/>
+              <rect x="1" y="1" width="5" height="5" rx="0.5" fill="#fff"/>
+              <rect x="2" y="2" width="3" height="3" fill="#000"/>
+              <rect x="14" y="0" width="7" height="7" rx="1" fill="#000"/>
+              <rect x="15" y="1" width="5" height="5" rx="0.5" fill="#fff"/>
+              <rect x="16" y="2" width="3" height="3" fill="#000"/>
+              <rect x="0" y="14" width="7" height="7" rx="1" fill="#000"/>
+              <rect x="1" y="15" width="5" height="5" rx="0.5" fill="#fff"/>
+              <rect x="2" y="16" width="3" height="3" fill="#000"/>
+              <rect x="9" y="0" width="2" height="2" fill="#000"/>
+              <rect x="11" y="0" width="2" height="2" fill="#000"/>
+              <rect x="9" y="3" width="3" height="2" fill="#000"/>
+              <rect x="9" y="9" width="2" height="2" fill="#000"/>
+              <rect x="12" y="9" width="2" height="2" fill="#000"/>
+              <rect x="9" y="12" width="5" height="2" fill="#000"/>
+              <rect x="14" y="9" width="7" height="2" fill="#000"/>
+              <rect x="0" y="9" width="7" height="2" fill="#000"/>
+              <rect x="14" y="14" width="2" height="7" fill="#000"/>
+              <rect x="17" y="14" width="4" height="2" fill="#000"/>
+              <rect x="17" y="17" width="4" height="4" fill="#000"/>
+              <rect x="9" y="15" width="3" height="3" fill="#000"/>
+              <rect x="9" y="19" width="5" height="2" fill="#000"/>
+            </svg>
+          </div>
+          <div class="footer-text">
+            <div class="footer-thanks">Thank you, Alex! 🎉</div>
+            <div class="footer-addr">145 Orchard St, New York, NY<br>+1 (212) 555-0198 · brew.co</div>
+            <div class="tracking-num">TRK: NB-2026-07-48521</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="side-panel">
+      <a href="../index.html" class="back-link">
+        ← Back to Challenges
+      </a>
+
+      <div class="day-badge">Daily UI · Challenge 017</div>
+
+      <h1 class="panel-title">
+        Purchase<br><span>Receipt</span>
+      </h1>
+
+      <p class="panel-desc">
+        A sleek dark-mode digital receipt for a specialty coffee shop. Features a glassmorphic layout with a zigzag paper tear effect, itemized order list, totals breakdown, payment info, and a scannable QR code for loyalty rewards.
+      </p>
+
+      <div class="status-pills">
+        <div class="pill success"><div class="pill-dot"></div> Payment Confirmed</div>
+        <div class="pill info"><div class="pill-dot"></div> Order #NB-48521</div>
+        <div class="pill purple"><div class="pill-dot"></div> Loyalty Points +38</div>
+      </div>
+
+      <div class="action-btns">
+        <button class="btn btn-primary" id="downloadBtn" onclick="showToast()">
+          ⬇ Download PDF
+        </button>
+        <button class="btn btn-ghost" id="emailBtn" onclick="showEmailToast()">
+          ✉ Email Receipt
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast">
+    <span class="toast-icon">✅</span>
+    <span id="toastMsg">Receipt downloaded!</span>
+  </div>
+
+  <script>
+    let toastTimer;
+    function showToast(msg = 'Receipt downloaded successfully!') {
+      clearTimeout(toastTimer);
+      const t = document.getElementById('toast');
+      document.getElementById('toastMsg').textContent = msg;
+      t.classList.add('show');
+      toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+    }
+    function showEmailToast() {
+      showToast('Receipt sent to alex@email.com 📧');
+    }
+  </script>
+</body>
+</html>

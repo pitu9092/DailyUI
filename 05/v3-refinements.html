@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>v2 → v3 Refinements — WeatherWise Icon</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --accent: #38bdf8;
+            --v2-warn: rgba(251, 191, 36, 0.85);
+            --v3-good: rgba(16, 185, 129, 0.85);
+            --bg: #0a0a0a;
+            --card: rgba(255,255,255,0.035);
+            --border: rgba(255,255,255,0.08);
+            --text: #fff;
+            --text-muted: rgba(255,255,255,0.6);
+            --text-sub: rgba(255,255,255,0.45);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            padding: 60px 20px;
+            min-height: 100vh;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(56,189,248,0.05), transparent);
+            z-index: -1;
+        }
+
+        .container { max-width: 1000px; margin: 0 auto; }
+
+        .header {
+            text-align: center;
+            margin-bottom: 56px;
+        }
+        .badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--v3-good), #059669);
+            color: white;
+            padding: 5px 18px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            letter-spacing: 0.5px;
+        }
+        h1 {
+            font-size: clamp(2rem, 5vw, 2.8rem);
+            font-weight: 800;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+        .subtitle {
+            font-size: 1rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Cards grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 64px;
+        }
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            border-color: rgba(255,255,255,0.12);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.2);
+        }
+        .card h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .card .label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-sub);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .before {
+            font-size: 0.8rem;
+            color: var(--v2-warn);
+            padding: 10px 14px;
+            background: rgba(251,191,36,0.08);
+            border-left: 3px solid var(--v2-warn);
+            border-radius: 8px;
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+        .after {
+            font-size: 0.8rem;
+            color: var(--v3-good);
+            padding: 10px 14px;
+            background: rgba(16,185,129,0.08);
+            border-left: 3px solid var(--v3-good);
+            border-radius: 8px;
+            line-height: 1.6;
+        }
+
+        /* Comparison table */
+        .table-wrapper {
+            overflow-x: auto;
+            margin-bottom: 64px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            background: var(--card);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+        th, td {
+            padding: 14px 18px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        th {
+            background: rgba(255,255,255,0.03);
+            font-weight: 600;
+            color: var(--accent);
+        }
+        td { color: var(--text-muted); }
+        tr:last-child td { border-bottom: none; }
+        .fix-good { color: var(--v3-good); font-weight: 600; }
+        .fix-old { color: var(--v2-warn); font-weight: 500; }
+
+        /* Specifications */
+        .specs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin-bottom: 64px;
+        }
+        .spec {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+        }
+        .spec-label {
+            font-size: 0.7rem;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+        .spec-value {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--v3-good);
+        }
+
+        /* CTA */
+        .cta {
+            text-align: center;
+            padding: 40px;
+            background: linear-gradient(135deg, rgba(16,185,129,0.08), rgba(251,191,36,0.08));
+            border: 1px solid rgba(16,185,129,0.2);
+            border-radius: 20px;
+            margin-top: 48px;
+        }
+        .cta h2 {
+            font-size: 1.6rem;
+            margin-bottom: 10px;
+        }
+        .cta p {
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 12px 26px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            transition: all 0.25s ease;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--v3-good), #059669);
+            color: white;
+            box-shadow: 0 4px 12px rgba(16,185,129,0.25);
+        }
+        .btn-secondary {
+            background: rgba(255,255,255,0.06);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 640px) {
+            .grid { grid-template-columns: 1fr; }
+            .specs { grid-template-columns: repeat(2, 1fr); }
+            h1 { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <span class="badge">v3 — Pro Refined</span>
+            <h1>v2 → v3 Refinements</h1>
+            <p class="subtitle">
+                Every feedback point addressed with production-grade polish.
+                See exactly how v2 was refined into Dribbble-ready v3.
+            </p>
+        </header>
+
+        <!-- Refinement Cards -->
+        <div class="grid">
+            <div class="card">
+                <span class="label">Refinement 1</span>
+                <h3>☀️ Sun Glow Subtlety</h3>
+                <div class="before"><strong>v2 Problem:</strong> Halo + rays overpowering. Glow 25% opacity, rays 10px thick.</div>
+                <div class="after"><strong>v3 Fix:</strong> Reduced glow to 18% opacity, rays 9px. Added 3-stop radial gradient for natural sphere.</div>
+            </div>
+
+            <div class="card">
+                <span class="label">Refinement 2</span>
+                <h3>☁️ Cloud Lightness</h3>
+                <div class="before"><strong>v2 Problem:</strong> Cloud gradient too grey (#cbd5e1), visually heavy, competes with sun.</div>
+                <div class="after"><strong>v3 Fix:</strong> Brighter midtone (#f8fafc), slightly smaller (105×58), highlights boosted to 45%. Airy feel.</div>
+            </div>
+
+            <div class="card">
+                <span class="label">Refinement 3</span>
+                <h3>🎨 Background Texture</h3>
+                <div class="before"><strong>v2 Problem:</strong> Flat gradient only. No texture, feels like sticker.</div>
+                <div class="after"><strong>v3 Fix:</strong> Added atmosphere glow (cyan 6%, 20px blur), inner container depth shadow, rim light stroke (4px), glass sweep path. Curved-glass depth.</div>
+            </div>
+
+            <div class="card">
+                <span class="label">Refinement 4</span>
+                <h3>✨ Sparkle Alignment</h3>
+                <div class="before"><strong>v2 Problem:</strong> Random positions, no intentionality.</div>
+                <div class="after"><strong>v3 Fix:</strong> Aligned on diagonal grid from sun center (170,170). Three points form visual triangle: top-right, bottom-left, right-center. Non-synchronized breath cycles.</div>
+            </div>
+
+            <div class="card">
+                <span class="label">Refinement 5</span>
+                <h3>💡 Lighting Model</h3>
+                <div class="before"><strong>v2 Problem:</strong> Inconsistent light sources, unclear direction.</div>
+                <div class="after"><strong>v3 Fix:</strong> Unified upper-left light source. Cloud shadow offset down-right (dx=2, dy=3). Rim light from same angle. Glass sweep top-left. All consistent.</div>
+            </div>
+
+            <div class="card">
+                <span class="label">Refinement 6</span>
+                <h3>📐 Grid System</h3>
+                <div class="before"><strong>v2 Problem:</strong> Organic placement, no structure.</div>
+                <div class="after"><strong>v3 Fix:</strong> 8px virtual grid. All element centers divisible by 2 or 5. Sun: (170,170). Cloud: (290,325). Sparkles on multiples of 5. Professional precision.</div>
+            </div>
+        </div>
+
+        <!-- Detailed Table -->
+        <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 20px;">Side-by-Side Comparison</h2>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Aspect</th>
+                        <th>v2 (Before)</th>
+                        <th>v3 (After)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Sun Glow Opacity</strong></td>
+                        <td class="fix-old">25% (strong halo)</td>
+                        <td class="fix-good">18% (subtle)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Ray Thickness</strong></td>
+                        <td class="fix-old">10px (thick)</td>
+                        <td class="fix-good">9px (refined)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cloud Gradient</strong></td>
+                        <td class="fix-old">#ffffff → #cbd5e1</td>
+                        <td class="fix-good">#ffffff → #f8fafc → #e2e8f0</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cloud Dimensions</strong></td>
+                        <td class="fix-old">110×60px</td>
+                        <td class="fix-good">105×58px (-5px, lighter)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Background</strong></td>
+                        <td class="fix-old">Flat gradient only</td>
+                        <td class="fix-good">Textured (glow + depth + rim + glass)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sparkle Placement</strong></td>
+                        <td class="fix-old">Random coordinates</td>
+                        <td class="fix-good">Diagonal grid alignment</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Light Direction</strong></td>
+                        <td class="fix-old">Inconsistent</td>
+                        <td class="fix-good">Unified upper-left source</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Spacing Grid</strong></td>
+                        <td class="fix-old">None</td>
+                        <td class="fix-good">8px grid system</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Specs -->
+        <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 20px;">v3 Technical Specs</h2>
+        <div class="specs">
+            <div class="spec">
+                <div class="spec-label">Sun Glow Opacity</div>
+                <div class="spec-value">18%</div>
+            </div>
+            <div class="spec">
+                <div class="spec-label">Ray Stroke</div>
+                <div class="spec-value">9px</div>
+            </div>
+            <div class="spec">
+                <div class="spec-label">Cloud Size</div>
+                <div class="spec-value">105×58px</div>
+            </div>
+            <div class="spec">
+                <div class="spec-label">Cloud Highlight</div>
+                <div class="spec-value">45%</div>
+            </div>
+            <div class="spec">
+                <div class="spec-label">Atmosphere Glow</div>
+                <div class="spec-value">6% cyan</div>
+            </div>
+            <div class="spec">
+                <div class="spec-label">Spacing Grid</div>
+                <div class="spec-value">8px</div>
+            </div>
+            <div class="spec">
+                <div class="spec-label">Glass Highlight</div>
+                <div class="spec-value">25% opacity</div>
+            </div>
+            <div class="spec">
+                <div class="spec-label">Corner Radius</div>
+                <div class="spec-value">120px (22%)</div>
+            </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="cta">
+            <h2>v3 — Pro Quality, Production Ready</h2>
+            <p>Refined with professional-level attention to spacing, typography, color saturation, and alignment. Ready for App Store submission.</p>
+            <div class="btn-group">
+                <a href="weatherwise-icon.svg" download class="btn btn-primary">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 4v12"/>
+                    </svg>
+                    Download v3 SVG
+                </a>
+                <a href="evolution-full.html" class="btn btn-secondary">See Full Evolution</a>
+                <a href="DESIGN_SYSTEM.md" class="btn btn-secondary">Design Specs</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Card hover tilt effect
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = (e.clientX - rect.left) / rect.width - 0.5;
+                const y = (e.clientY - rect.top) / rect.height - 0.5;
+                card.style.transform = `translateY(-4px) rotateX(${y * 2}deg) rotateY(${x * 2}deg)`;
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = '';
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WeatherWise Icon Evolution — Clean View</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e40af 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+        .subtitle {
+            text-align: center;
+            color: rgba(255,255,255,0.6);
+            font-size: 0.95rem;
+            margin-bottom: 48px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 48px;
+            align-items: start;
+        }
+        .icon-column {
+            text-align: center;
+        }
+        .icon-column svg {
+            width: 260px;
+            height: 260px;
+            border-radius: 22%;
+            display: block;
+            margin: 0 auto 20px;
+            /* NO border, NO stroke, NO shadow — pure icon */
+        }
+        .label {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 6px;
+        }
+        .v1 .label { color: #ef4444; }
+        .v2 .label { color: #fbbf24; }
+        .v3 .label { color: #10b981; }
+        .desc {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.5);
+            max-width: 240px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+        .sparkle-note {
+            margin-top: 48px;
+            text-align: center;
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.4);
+        }
+        @media (max-width: 900px) {
+            .grid { grid-template-columns: 1fr; gap: 40px; }
+            .icon-column svg { width: 200px; height: 200px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Icon Evolution — Clean View</h1>
+        <p class="subtitle">v1 → v2 → v3 side-by-side, no borders, no extra decoration<br>Pure SVG icons only</p>
+
+        <div class="grid">
+            <!-- v1 -->
+            <div class="icon-column v1">
+                <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="bg1" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#0f172a"/>
+                            <stop offset="50%" style="stop-color:#1e40af"/>
+                            <stop offset="100%" style="stop-color:#1e3a8a"/>
+                        </linearGradient>
+                        <linearGradient id="sun1" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#fbbf24"/>
+                            <stop offset="100%" style="stop-color:#f59e0b"/>
+                        </linearGradient>
+                        <linearGradient id="cloud1" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#ffffff"/>
+                            <stop offset="100%" style="stop-color:#cbd5e1"/>
+                        </linearGradient>
+                    </defs>
+                    <rect width="512" height="512" rx="120" fill="url(#bg1)"/>
+                    <circle cx="150" cy="160" r="70" fill="url(#sun1)"/>
+                    <ellipse cx="340" cy="340" rx="100" ry="50" fill="url(#cloud1)"/>
+                    <ellipse cx="380" cy="320" rx="70" ry="55" fill="url(#cloud1)"/>
+                    <ellipse cx="420" cy="350" rx="60" ry="45" fill="url(#cloud1)"/>
+                    <ellipse cx="300" cy="350" rx="80" ry="45" fill="url(#cloud1)"/>
+                </svg>
+                <div class="label">v1 — Flat</div>
+                <p class="desc">Basic sun+cloud. Flat gradients, no depth, unbalanced.</p>
+            </div>
+
+            <!-- v2 -->
+            <div class="icon-column v2">
+                <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="bg2" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#0f172a"/>
+                            <stop offset="50%" style="stop-color:#1e40af"/>
+                            <stop offset="100%" style="stop-color:#1e3a8a"/>
+                        </linearGradient>
+                        <radialGradient id="sun2" cx="40%" cy="40%" r="60%">
+                            <stop offset="0%" style="stop-color:#fef08a"/>
+                            <stop offset="60%" style="stop-color:#fbbf24"/>
+                            <stop offset="100%" style="stop-color:#f59e0b"/>
+                        </radialGradient>
+                        <linearGradient id="cloud2" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#ffffff"/>
+                            <stop offset="50%" style="stop-color:#e2e8f0"/>
+                            <stop offset="100%" style="stop-color:#cbd5e1"/>
+                        </linearGradient>
+                    </defs>
+                    <rect width="512" height="512" rx="120" fill="url(#bg2)"/>
+                    <ellipse cx="290" cy="310" rx="110" ry="60" fill="url(#cloud2)"/>
+                    <ellipse cx="340" cy="295" rx="75" ry="55" fill="url(#cloud2)"/>
+                    <ellipse cx="380" cy="315" rx="60" ry="48" fill="url(#cloud2)"/>
+                    <ellipse cx="240" cy="315" rx="85" ry="52" fill="url(#cloud2)"/>
+                    <ellipse cx="200" cy="340" rx="70" ry="45" fill="url(#cloud2)"/>
+                    <circle cx="170" cy="170" r="85" fill="url(#sun2)" opacity="0.25"/>
+                    <circle cx="170" cy="170" r="68" fill="url(#sun2)"/>
+                    <g stroke="url(#sun2)" stroke-width="10" stroke-linecap="round" opacity="0.85">
+                        <line x1="170" y1="85" x2="170" y2="55"/>
+                        <line x1="230" y1="130" x2="260" y2="100"/>
+                        <line x1="245" y1="170" x2="280" y2="170"/>
+                        <line x1="230" y1="210" x2="260" y2="240"/>
+                        <line x1="170" y1="255" x2="170" y2="285"/>
+                        <line x1="110" y1="210" x2="80" y2="240"/>
+                        <line x1="95" y1="170" x2="60" y2="170"/>
+                        <line x1="110" y1="130" x2="80" y2="100"/>
+                    </g>
+                </svg>
+                <div class="label">v2 — Glassmorphism</div>
+                <p class="desc">Glassmorphism applied. Balanced, radial sun, glow effects.</p>
+            </div>
+
+            <!-- v3 -->
+            <div class="icon-column v3">
+                <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="bg3" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#0f172a"/>
+                            <stop offset="40%" style="stop-color:#1e40af"/>
+                            <stop offset="100%" style="stop-color:#1e3a8a"/>
+                        </linearGradient>
+                        <radialGradient id="sun3" cx="35%" cy="35%" r="65%">
+                            <stop offset="0%" style="stop-color:#fef3c7"/>
+                            <stop offset="50%" style="stop-color:#fbbf24"/>
+                            <stop offset="100%" style="stop-color:#f59e0b"/>
+                        </radialGradient>
+                        <linearGradient id="cloud3" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#ffffff"/>
+                            <stop offset="60%" style="stop-color:#f8fafc"/>
+                            <stop offset="100%" style="stop-color:#e2e8f0"/>
+                        </linearGradient>
+                    </defs>
+                    <rect width="512" height="512" rx="120" fill="url(#bg3)"/>
+                    <rect width="512" height="512" rx="120" fill="none" stroke="rgba(56,189,248,0.06)" stroke-width="20"/>
+                    <g>
+                        <ellipse cx="295" cy="355" rx="105" ry="40" fill="rgba(0,0,0,0.1)" opacity="0.25"/>
+                        <ellipse cx="290" cy="325" rx="105" ry="58" fill="url(#cloud3)"/>
+                        <ellipse cx="335" cy="312" rx="72" ry="52" fill="url(#cloud3)"/>
+                        <ellipse cx="370" cy="328" rx="58" ry="46" fill="url(#cloud3)"/>
+                        <ellipse cx="245" cy="328" rx="82" ry="50" fill="url(#cloud3)"/>
+                        <ellipse cx="205" cy="348" rx="68" ry="44" fill="url(#cloud3)"/>
+                        <ellipse cx="272" cy="305" rx="38" ry="18" fill="rgba(255,255,255,0.45)"/>
+                        <ellipse cx="328" cy="318" rx="28" ry="16" fill="rgba(255,255,255,0.4)"/>
+                    </g>
+                    <circle cx="170" cy="170" r="85" fill="#fbbf24" opacity="0.18"/>
+                    <circle cx="170" cy="170" r="65" fill="url(#sun3)"/>
+                    <g stroke="url(#sun3)" stroke-width="9" stroke-linecap="round" opacity="0.75">
+                        <line x1="170" y1="85" x2="170" y2="58"/>
+                        <line x1="225" y1="130" x2="250" y2="105"/>
+                        <line x1="240" y1="170" x2="270" y2="170"/>
+                        <line x1="225" y1="210" x2="250" y2="235"/>
+                        <line x1="170" y1="255" x2="170" y2="282"/>
+                        <line x1="115" y1="210" x2="90" y2="235"/>
+                        <line x1="100" y1="170" x2="70" y2="170"/>
+                        <line x1="115" y1="130" x2="90" y2="105"/>
+                    </g>
+                    <circle cx="165" cy="165" r="35" fill="rgba(255,255,255,0.25)"/>
+                    <g opacity="0.85">
+                        <circle cx="355" cy="115" r="6" fill="#38bdf8">
+                            <animate attributeName="opacity" values="0.85;0.35;0.85" dur="2.2s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="140" cy="360" r="5.5" fill="#fbbf24">
+                            <animate attributeName="opacity" values="0.75;0.25;0.75" dur="2.8s" repeatCount="indefinite" begin="0.4s"/>
+                        </circle>
+                        <circle cx="420" cy="250" r="4.5" fill="#38bdf8">
+                            <animate attributeName="opacity" values="0.65;0.15;0.65" dur="1.9s" repeatCount="indefinite" begin="0.8s"/>
+                        </circle>
+                    </g>
+                    <path d="M 90 70 L 200 55 L 260 120 L 180 180 Q 130 140 90 70" fill="rgba(255,255,255,0.08)" opacity="0.25"/>
+                </svg>
+                <div class="label">v3 — Pro Refined</div>
+                <p class="desc">Subtle glow, airy cloud, textured depth, aligned sparkles, unified light.</p>
+            </div>
+        </div>
+
+        <p class="sparkle-note">Note: Sparkle animations play in browser. Icons have no borders, strokes, or shadows around them.</p>
+    </div>
+</body>
+</html>

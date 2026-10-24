@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Smart Switch</title>
+
+		<link
+			href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+			rel="stylesheet"
+		/>
+
+		<style>
+			* {
+				box-sizing: border-box;
+				margin: 0;
+				padding: 0;
+				user-select: none;
+			}
+
+			body {
+				font-family: "Inter", monospace;
+				background: #0a1013;
+				color: #4caf50;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				min-height: 100vh;
+			}
+
+			#container {
+				width: 100%;
+				max-width: 400px;
+				padding: 2rem;
+				text-align: center;
+			}
+
+			.readout {
+				font-size: 1.5rem;
+				margin-bottom: 1rem;
+			}
+
+			.switch-container {
+				position: relative;
+				width: 150px;
+				height: 35px;
+				margin: 2rem auto;
+				border-radius: 20px;
+				background: linear-gradient(90deg, #1f1f1f, #323232);
+				box-shadow: inset 0 0 20px rgba(76, 175, 80, 0.3);
+			}
+
+			.switch-label {
+				display: block;
+				margin-bottom: 10px;
+				font-size: 0.9rem;
+				text-transform: uppercase;
+			}
+
+			#onoffswitch {
+				display: none;
+			}
+
+			.toggle {
+				position: absolute;
+				width: 50%;
+				height: 100%;
+				background: linear-gradient(90deg, #4caf50, #00b5ad);
+				border-radius: 20px;
+				transition: 0.4s;
+				cursor: pointer;
+			}
+
+			#onoffswitch:checked + .toggle {
+				left: 50%;
+				background: #00b5ad;
+			}
+
+			.buttons {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 10px;
+				justify-content: center;
+				margin-top: 20px;
+			}
+
+			.button-pill {
+				padding: 10px 20px;
+				border-radius: 30px;
+				border: none;
+				cursor: pointer;
+				background: linear-gradient(135deg, #203a43, #2c5282);
+				color: #fff;
+				font-weight: 600;
+				transition: 0.3s;
+			}
+
+			.button-pill:hover {
+				transform: scale(1.05);
+			}
+
+			.status {
+				margin-top: 20px;
+				font-size: 1rem;
+			}
+
+			.clock {
+				display: none;
+				font-size: 2rem;
+				margin-top: 10px;
+				color: #00f5ff;
+			}
+
+			#onoffswitch:checked ~ .clock {
+				display: block;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="container">
+			<div class="readout">
+				System Status: <span id="system-status">Off</span>
+			</div>
+			<div class="readout">Power: <span id="power-status">0%</span></div>
+
+			<label class="switch-label">Power System</label>
+			<div class="switch-container">
+				<input id="onoffswitch" type="checkbox" onchange="toggleSystem()" />
+				<div class="toggle"></div>
+			</div>
+
+			<div class="clock" id="clock">00:00</div>
+
+			<div class="buttons">
+				<button class="button-pill" onclick="start(300)">5 min</button>
+				<button class="button-pill" onclick="start(600)">10 min</button>
+				<button class="button-pill" onclick="togglePause()" id="btnPause">
+					Pause
+				</button>
+				<button class="button-pill" onclick="reset()" id="btnReset">
+					Reset
+				</button>
+			</div>
+
+			<div class="status" id="status">Ready</div>
+		</div>
+
+		<script>
+			let timer = null;
+			let timeLeft = 0;
+			let isPaused = false;
+
+			function toggleSystem() {
+				const isOn = document.getElementById("onoffswitch").checked;
+				document.getElementById("system-status").innerText = isOn
+					? "On"
+					: "Off";
+			}
+
+			function start(seconds) {
+				clearInterval(timer);
+				timeLeft = seconds;
+				isPaused = false;
+				updateClock();
+
+				timer = setInterval(() => {
+					if (!isPaused && timeLeft > 0) {
+						timeLeft--;
+						updateClock();
+					} else if (timeLeft === 0) {
+						clearInterval(timer);
+						document.getElementById("status").innerText = "Completed";
+					}
+				}, 1000);
+
+				document.getElementById("status").innerText = "Running";
+			}
+
+			function updateClock() {
+				const min = Math.floor(timeLeft / 60);
+				const sec = timeLeft % 60;
+				document.getElementById("clock").innerText =
+					`${String(min).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
+			}
+
+			function togglePause() {
+				isPaused = !isPaused;
+				document.getElementById("btnPause").innerText = isPaused
+					? "Resume"
+					: "Pause";
+				document.getElementById("status").innerText = isPaused
+					? "Paused"
+					: "Running";
+			}
+
+			function reset() {
+				clearInterval(timer);
+				timeLeft = 0;
+				updateClock();
+				document.getElementById("status").innerText = "Reset";
+			}
+		</script>
+	</body>
+</html>

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Countdown Timer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Orbitron', monospace;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: #0a0a0f;
+      overflow: hidden;
+      color: #0ff;
+    }
+    #grid {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background-image:
+        linear-gradient(rgba(0,255,255,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,255,255,0.05) 1px, transparent 1px);
+      background-size: 40px 40px;
+      z-index: 0;
+    }
+    #particles { position: fixed; top: 0; left: 0; z-index: 0; }
+    .container {
+      position: relative; z-index: 1;
+      background: rgba(10, 10, 20, 0.7);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(0, 255, 255, 0.2);
+      border-radius: 24px;
+      padding: 3rem 4rem;
+      text-align: center;
+      box-shadow: 0 0 40px rgba(0, 255, 255, 0.1), inset 0 0 60px rgba(0, 255, 255, 0.05);
+      min-width: 480px;
+    }
+    .timer {
+      font-size: 7rem;
+      font-weight: 900;
+      letter-spacing: 6px;
+      background: linear-gradient(90deg, #00F5FF, #00BFFF);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow:
+        0 0 4px #00F5FF,
+        0 0 8px #00F5FF,
+        0 0 16px #00F5FF,
+        0 0 32px rgba(0, 245, 255, 0.5);
+      font-variant-numeric: tabular-nums;
+      margin-bottom: 2rem;
+      animation: pulseGlow 1.5s infinite, flicker 1s infinite;
+    }
+    @keyframes pulseGlow {
+      0%, 100% { text-shadow: 0 0 4px #00F5FF, 0 0 8px #00F5FF, 0 0 16px #00F5FF, 0 0 32px rgba(0, 245, 255, 0.5); }
+      50% { text-shadow: 0 0 8px #00F5FF, 0 0 16px #00F5FF, 0 0 32px #00F5FF, 0 0 64px rgba(0, 245, 255, 0.8); }
+    }
+    @keyframes flicker {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.95; }
+    }
+    .timer.glitch {
+      animation: glitch 0.3s infinite;
+    }
+    .timer.ending {
+      animation: pulse 0.5s ease-in-out infinite alternate, flicker 1s infinite !important;
+      text-shadow: 
+        0 0 5px #ff0040,
+        0 0 15px #ff0040,
+        0 0 30px #ff0040,
+        0 0 60px rgba(255, 0, 64, 0.6) !important;
+    }
+    .timer.done {
+      animation: timesUp 0.6s ease-in-out infinite, flicker 0.5s infinite;
+      text-shadow: 
+        0 0 5px #ff0040,
+        0 0 20px #ff0040,
+        0 0 40px #ff0040,
+        0 0 80px rgba(255, 0, 64, 0.8),
+        0 0 120px rgba(255, 0, 64, 0.9);
+      color: #ff0040 !important;
+      background: none !important;
+      -webkit-background-clip: none !important;
+      background-clip: none !important;
+    }
+    .ticking { animation: tick 1s steps(1) infinite; }
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .controls button {
+      padding: 0.85rem 2.5rem;
+      border: 1px solid rgba(0, 255, 255, 0.4);
+      border-radius: 999px;
+      background: rgba(0, 255, 255, 0.08);
+      color: #0ff;
+      font-family: 'Orbitron', monospace;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .controls button:hover {
+      background: rgba(0, 255, 255, 0.2);
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+    .controls button:active { transform: translateY(0); }
+    .controls button.pause-btn {
+      border-color: rgba(255, 165, 0, 0.6);
+      color: #ffa500;
+      background: rgba(255, 165, 0, 0.1);
+    }
+    .controls button.pause-btn:hover {
+      background: rgba(255, 165, 0, 0.25);
+      box-shadow: 0 0 20px rgba(255, 165, 0, 0.3);
+    }
+    .status { margin-top: 1.5rem; font-size: 0.8rem; color: rgba(0,255,255,0.5); letter-spacing: 3px; text-transform: uppercase; }
+
+    @keyframes glitch {
+      0% { transform: translate(0); }
+      20% { transform: translate(-2px, 2px); }
+      40% { transform: translate(-2px, -2px); }
+      60% { transform: translate(2px, 2px); }
+      80% { transform: translate(2px, -2px); }
+      100% { transform: translate(0); }
+    }
+    @keyframes pulse {
+      from { opacity: 1; }
+      to { opacity: 0.6; }
+    }
+    @keyframes timesUp {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    @keyframes tick {
+      50% { opacity: 0.8; }
+    }
+  </style>
+</head>
+<body>
+  <div id="grid"></div>
+  <canvas id="particles"></canvas>
+  <div class="container">
+    <div class="timer" id="timer">00:00:00</div>
+    <div class="controls">
+      <button onclick="start(300)" id="btn5">5 min</button>
+      <button onclick="start(600)" id="btn10">10 min</button>
+      <button onclick="togglePause()" id="btnPause" style="display:none"></button>
+      <button onclick="reset()" id="btnReset">Reset</button>
+    </div>
+    <div class="status" id="status">Ready</div>
+  </div>
+
+  <script>
+    let interval, totalSeconds = 0, remaining = 0, paused = false, running = false;
+    const timerEl = document.getElementById('timer');
+    const statusEl = document.getElementById('status');
+    const btnPause = document.getElementById('btnPause');
+    const btn5 = document.getElementById('btn5');
+    const btn10 = document.getElementById('btn10');
+    const btnReset = document.getElementById('btnReset');
+
+    function format(s) { return String(s).padStart(2, '0'); }
+
+    function updateDisplay(left) {
+      timerEl.textContent = `${format(Math.floor(left / 3600))}:${format(Math.floor((left % 3600) / 60))}:${format(left % 60)}`;
+      if (left <= 10 && left > 0) {
+        timerEl.classList.add('ending');
+        timerEl.classList.remove('glitch', 'done', 'ticking');
+      } else {
+        timerEl.classList.remove('ending', 'done');
+        if (running && !paused) timerEl.classList.add('ticking');
+      }
+    }
+
+    function start(seconds) {
+      clearInterval(interval);
+      totalSeconds = seconds;
+      remaining = seconds;
+      paused = false;
+      running = true;
+      timerEl.classList.remove('ending', 'done');
+      timerEl.classList.add('glitch');
+      statusEl.textContent = 'Running';
+      btn5.style.display = 'none';
+      btn10.style.display = 'none';
+      btnReset.style.display = 'none';
+      btnPause.style.display = 'inline-block';
+      btnPause.textContent = 'Pause';
+      btnPause.className = 'pause-btn';
+      setTimeout(() => timerEl.classList.remove('glitch'), 300);
+      interval = setInterval(() => {
+        if (!paused) {
+          remaining--;
+          updateDisplay(remaining);
+          if (remaining <= 0) {
+            clearInterval(interval);
+            running = false;
+            timerEl.classList.add('done');
+            timerEl.classList.remove('ticking', 'ending');
+            statusEl.textContent = "Time's Up!";
+            btnPause.style.display = 'none';
+            btn5.style.display = 'inline-block';
+            btn10.style.display = 'inline-block';
+            btnReset.style.display = 'inline-block';
+          }
+        }
+      }, 1000);
+      updateDisplay(remaining);
+    }
+
+    function togglePause() {
+      paused = !paused;
+      btnPause.textContent = paused ? 'Resume' : 'Pause';
+      statusEl.textContent = paused ? 'Paused' : 'Running';
+      timerEl.classList.toggle('ticking', !paused && running);
+    }
+
+    function reset() {
+      clearInterval(interval);
+      running = false;
+      paused = false;
+      timerEl.className = 'timer';
+      timerEl.textContent = '00:00:00';
+      statusEl.textContent = 'Ready';
+      btn5.style.display = 'inline-block';
+      btn10.style.display = 'inline-block';
+      btnReset.style.display = 'inline-block';
+      btnPause.style.display = 'none';
+    }
+
+    // Particles
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    resize();
+    window.addEventListener('resize', resize);
+    for (let i = 0; i < 60; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        vx: (Math.random() - 0.5) * 0.5,
+        vy: (Math.random() - 0.5) * 0.5,
+        r: Math.random() * 2 + 0.5,
+        a: Math.random() * 0.5 + 0.2
+      });
+    }
+    function drawParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0) p.x = canvas.width;
+        if (p.x > canvas.width) p.x = 0;
+        if (p.y < 0) p.y = canvas.height;
+        if (p.y > canvas.height) p.y = 0;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(0,255,255,${p.a})`;
+        ctx.fill();
+      });
+      requestAnimationFrame(drawParticles);
+    }
+    drawParticles();
+  </script>
+</body>
+</html>

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+    <!-- WeatherWise App Icon - REDESIGNED V2 -->
+    <!-- Improved: Balanced composition, consistent glassmorphism style, modern depth -->
+
+    <defs>
+        <!-- Unified gradient: deep atmospheric blue -->
+        <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#0f172a"/>
+            <stop offset="40%" style="stop-color:#1e40af"/>
+            <stop offset="100%" style="stop-color:#1e3a8a"/>
+        </linearGradient>
+
+        <!-- Sun: warm radial gradient with glow -->
+        <radialGradient id="sunGrad" cx="40%" cy="40%" r="60%">
+            <stop offset="0%" style="stop-color:#fef08a"/>
+            <stop offset="60%" style="stop-color:#fbbf24"/>
+            <stop offset="100%" style="stop-color:#f59e0b"/>
+        </radialGradient>
+
+        <!-- Cloud: soft multi-layer gradient -->
+        <linearGradient id="cloudGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#ffffff"/>
+            <stop offset="50%" style="stop-color:#e2e8f0"/>
+            <stop offset="100%" style="stop-color:#cbd5e1"/>
+        </linearGradient>
+
+        <!-- Glass highlight (subtle reflection) -->
+        <linearGradient id="glassHighlight" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:rgba(255,255,255,0.2)"/>
+            <stop offset="50%" style="stop-color:rgba(255,255,255,0.05)"/>
+            <stop offset="100%" style="stop-color:rgba(255,255,255,0)"/>
+        </linearGradient>
+
+        <!-- Outer glow (soft luminosity) -->
+        <filter id="outerGlow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="12" result="blur"/>
+            <feFlood flood-color="#38bdf8" flood-opacity="0.15" result="color"/>
+            <feComposite in="color" in2="blur" operator="in" result="glow"/>
+            <feMerge>
+                <feMergeNode in="glow"/>
+                <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+        </filter>
+
+        <!-- Inner soft shadow (depth) -->
+        <filter id="innerDepth" x="-20%" y="-20%" width="140%" height="140%">
+            <feOffset dx="0" dy="2"/>
+            <feGaussianBlur stdDeviation="4" result="offsetblur"/>
+            <feComposite in="SourceAlpha" in2="offsetblur" operator="out" result="inverse"/>
+            <feFlood flood-color="black" flood-opacity="0.2" result="color"/>
+            <feComposite in="color" in2="inverse" operator="in" result="shadow"/>
+            <feComposite in="SourceGraphic" in2="shadow" operator="over"/>
+        </filter>
+
+        <!-- Subtle noise texture (for premium feel) -->
+        <filter id="noise">
+            <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" result="noise"/>
+            <feColorMatrix type="saturate" values="0"/>
+            <feBlend in="SourceGraphic" in2="noise" mode="multiply" result="blend"/>
+            <feComposite in="SourceGraphic" in2="blend" operator="in"/>
+        </filter>
+
+        <!-- Sun glow effect -->
+        <filter id="sunGlow">
+            <feGaussianBlur stdDeviation="6" result="blur"/>
+            <feMerge>
+                <feMergeNode in="blur"/>
+                <feMergeNode in="blur"/>
+                <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+        </filter>
+    </defs>
+
+    <!-- Main background with rounded corners -->
+    <rect width="512" height="512" rx="120" ry="120" fill="url(#bgGrad)" filter="url(#innerDepth)"/>
+
+    <!-- Subtle radial light (top-right) -->
+    <circle cx="420" cy="100" r="100" fill="url(#sunGrad)" opacity="0.08" filter="url(#outerGlow)"/>
+
+    <!-- === CLOUD (CENTRAL LOWER) === -->
+    <!-- Larger, more centered cloud cluster with soft overlapping puffs -->
+    <g filter="url(#outerGlow)" transform="translate(20, 10)">
+
+        <!-- Cloud shadow layer (behind) -->
+        <ellipse cx="295" cy="330" rx="110" ry="60" fill="rgba(0,0,0,0.15)" opacity="0.3"/>
+
+        <!-- Main cloud body (central bottom) -->
+        <ellipse cx="290" cy="310" rx="110" ry="60" fill="url(#cloudGrad)"/>
+
+        <!-- Overlapping puffs for depth -->
+        <ellipse cx="340" cy="295" rx="75" ry="55" fill="url(#cloudGrad)"/>
+        <ellipse cx="380" cy="315" rx="60" ry="48" fill="url(#cloudGrad)"/>
+        <ellipse cx="240" cy="315" rx="85" ry="52" fill="url(#cloudGrad)"/>
+        <ellipse cx="200" cy="340" rx="70" ry="45" fill="url(#cloudGrad)"/>
+
+        <!-- Cloud highlights (soft white accent) -->
+        <ellipse cx="270" cy="290" rx="40" ry="20" fill="rgba(255,255,255,0.4)"/>
+        <ellipse cx="330" cy="300" rx="30" ry="18" fill="rgba(255,255,255,0.35)"/>
+    </g>
+
+    <!-- === SUN (UPPER LEFT, BALANCED) === -->
+    <g filter="url(#sunGlow)">
+        <!-- Sun glow aura -->
+        <circle cx="170" cy="170" r="85" fill="url(#sunGrad)" opacity="0.25"/>
+
+        <!-- Main sun circle (slightly smaller for elegance) -->
+        <circle cx="170" cy="170" r="68" fill="url(#sunGrad)"/>
+
+        <!-- Sun rays (subtle, tapered) -->
+        <g stroke="url(#sunGrad)" stroke-width="10" stroke-linecap="round" opacity="0.85">
+            <!-- 8 rays with slight variation -->
+            <line x1="170" y1="85" x2="170" y2="55"/>      <!-- Top -->
+            <line x1="230" y1="130" x2="260" y2="100"/>   <!-- Top-right -->
+            <line x1="245" y1="170" x2="280" y2="170"/>   <!-- Right -->
+            <line x1="230" y1="210" x2="260" y2="240"/>   <!-- Bottom-right -->
+            <line x1="170" y1="255" x2="170" y2="285"/>   <!-- Bottom -->
+            <line x1="110" y1="210" x2="80" y2="240"/>    <!-- Bottom-left -->
+            <line x1="95" y1="170" x2="60" y2="170"/>     <!-- Left -->
+            <line x1="110" y1="130" x2="80" y2="100"/>    <!-- Top-left -->
+        </g>
+
+        <!-- Inner sun detail (adds dimension) -->
+        <circle cx="170" cy="170" r="45" fill="rgba(255,255,255,0.2)"/>
+    </g>
+
+    <!-- === ACCENT SPARKLES (subtle, animated) === -->
+    <g opacity="0.9">
+        <!-- Top-right sparkle (cyan) - breath animation -->
+        <circle cx="360" cy="110" r="7" fill="#38bdf8">
+            <animate attributeName="opacity" values="0.9;0.4;0.9" dur="2s" repeatCount="indefinite" begin="0s"/>
+        </circle>
+
+        <!-- Bottom-left sparkle (gold) -->
+        <circle cx="135" cy="370" r="6" fill="#fbbf24">
+            <animate attributeName="opacity" values="0.8;0.3;0.8" dur="2.5s" repeatCount="indefinite" begin="0.3s"/>
+        </circle>
+
+        <!-- Far right sparkle (cyan) -->
+        <circle cx="430" cy="260" r="5" fill="#38bdf8">
+            <animate attributeName="opacity" values="0.7;0.2;0.7" dur="1.8s" repeatCount="indefinite" begin="0.6s"/>
+        </circle>
+    </g>
+
+    <!-- === GLASS HIGHLIGHT (top-left sweep) === -->
+    <path d="M 100 80 Q 200 60 280 120 L 200 200 Q 120 150 100 80"
+          fill="url(#glassHighlight)"
+          opacity="0.3"
+          transform="scale(1.1)"
+    />
+
+    <!-- Subtle border highlight (reflection edge) -->
+    <rect x="0" y="0" width="512" height="512" rx="120" ry="120"
+          fill="none"
+          stroke="rgba(255,255,255,0.08)"
+          stroke-width="3"/>
+
+    <!-- Inner glow rim (adds to "floating" feel) -->
+    <rect x="0" y="0" width="512" height="512" rx="120" ry="120"
+          fill="none"
+          stroke="rgba(255,255,255,0.04)"
+          stroke-width="6"/>
+
+</svg>

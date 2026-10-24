@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Daily UI #018 — Analytics Chart</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #06080f;
+      --card: rgba(13,17,30,0.9);
+      --border: rgba(255,255,255,0.07);
+      --accent: #6366f1;
+      --green: #10b981;
+      --red: #ef4444;
+      --yellow: #f59e0b;
+      --cyan: #06b6d4;
+      --text: #f1f5f9;
+      --muted: #64748b;
+      --dim: #1e293b;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'Space Grotesk', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 24px;
+      position: relative;
+      overflow-x: hidden;
+    }
+    body::before {
+      content:'';
+      position:fixed;
+      width:600px; height:600px;
+      background: radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 70%);
+      top:-100px; right:-100px;
+      pointer-events:none;
+    }
+    body::after {
+      content:'';
+      position:fixed;
+      width:400px; height:400px;
+      background: radial-gradient(circle, rgba(6,182,212,0.08) 0%, transparent 70%);
+      bottom:-50px; left:-50px;
+      pointer-events:none;
+    }
+
+    /* Layout */
+    .dashboard {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-rows: auto auto 1fr;
+      gap: 20px;
+    }
+
+    /* Top bar */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .topbar-left { display:flex; align-items:center; gap:14px; }
+    .back-link {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.82rem;
+      display:flex; align-items:center; gap:5px;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--text); }
+    .page-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 800;
+    }
+    .page-title span { color: var(--accent); }
+    .badge-017 {
+      font-size: 0.7rem;
+      color: var(--accent);
+      background: rgba(99,102,241,0.1);
+      border: 1px solid rgba(99,102,241,0.25);
+      border-radius: 20px;
+      padding: 3px 10px;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+    .period-tabs {
+      display:flex; gap:4px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 4px;
+    }
+    .tab {
+      padding: 6px 14px;
+      border-radius: 7px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      transition: all 0.2s;
+    }
+    .tab.active { background: var(--accent); color: #fff; }
+    .tab:hover:not(.active) { color: var(--text); }
+
+    /* KPI cards */
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    .kpi {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+      animation: fadeUp 0.5s ease both;
+    }
+    .kpi:nth-child(1) { animation-delay:.05s; }
+    .kpi:nth-child(2) { animation-delay:.1s; }
+    .kpi:nth-child(3) { animation-delay:.15s; }
+    .kpi:nth-child(4) { animation-delay:.2s; }
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(16px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    .kpi::before {
+      content:'';
+      position:absolute;
+      top:0; left:0; right:0; height:3px;
+      border-radius: 16px 16px 0 0;
+    }
+    .kpi.c1::before { background: linear-gradient(90deg, var(--accent), var(--cyan)); }
+    .kpi.c2::before { background: linear-gradient(90deg, var(--green), #34d399); }
+    .kpi.c3::before { background: linear-gradient(90deg, var(--yellow), #fbbf24); }
+    .kpi.c4::before { background: linear-gradient(90deg, var(--red), #f87171); }
+
+    .kpi-icon { font-size: 1.4rem; margin-bottom: 10px; }
+    .kpi-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+    .kpi-value { font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 800; margin-bottom: 6px; }
+    .kpi-change { font-size: 0.78rem; font-weight: 600; display:flex; align-items:center; gap:4px; }
+    .kpi-change.up { color: var(--green); }
+    .kpi-change.down { color: var(--red); }
+
+    /* Main charts row */
+    .charts-row {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 20px;
+      align-items: start;
+    }
+
+    /* Card base */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 24px;
+      animation: fadeUp 0.5s ease 0.25s both;
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .card-title { font-family:'Syne',sans-serif; font-size:1rem; font-weight:700; }
+    .card-sub { font-size:0.75rem; color:var(--muted); margin-top:2px; }
+    .legend {
+      display:flex; gap:14px; flex-wrap:wrap;
+    }
+    .legend-item { display:flex; align-items:center; gap:6px; font-size:0.75rem; color:var(--muted); }
+    .legend-dot { width:8px; height:8px; border-radius:50%; }
+
+    /* SVG Chart */
+    .chart-wrap {
+      width: 100%;
+      overflow: hidden;
+      position: relative;
+    }
+    .chart-wrap svg { width:100%; height:auto; display:block; }
+
+    /* Donut */
+    .donut-wrap {
+      display:flex;
+      flex-direction:column;
+      gap:20px;
+    }
+    .donut-svg-wrap { display:flex; justify-content:center; position:relative; }
+    .donut-center {
+      position:absolute;
+      top:50%; left:50%;
+      transform:translate(-50%,-50%);
+      text-align:center;
+    }
+    .donut-center-val { font-family:'Syne',sans-serif; font-size:1.6rem; font-weight:800; }
+    .donut-center-label { font-size:0.7rem; color:var(--muted); margin-top:2px; }
+
+    .donut-list { display:flex; flex-direction:column; gap:10px; }
+    .donut-row {
+      display:flex; align-items:center; gap:10px;
+    }
+    .donut-row-bar-bg {
+      flex:1; height:6px;
+      background: var(--dim);
+      border-radius:10px;
+      overflow:hidden;
+    }
+    .donut-row-bar { height:100%; border-radius:10px; transition:width 1s ease; }
+    .donut-row-label { font-size:0.78rem; color:var(--muted); width:80px; white-space:nowrap; }
+    .donut-row-val { font-size:0.78rem; font-weight:700; width:36px; text-align:right; }
+
+    /* Bottom row */
+    .bottom-row {
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:20px;
+      animation: fadeUp 0.5s ease 0.35s both;
+    }
+    .sparkline-row { display:flex; flex-direction:column; gap:14px; }
+    .spark-item { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+    .spark-label { font-size:0.8rem; color:var(--muted); min-width:90px; }
+    .spark-bar-wrap { flex:1; height:8px; background:var(--dim); border-radius:10px; overflow:hidden; }
+    .spark-bar { height:100%; border-radius:10px; }
+    .spark-val { font-size:0.82rem; font-weight:700; min-width:36px; text-align:right; }
+
+    .activity-list { display:flex; flex-direction:column; gap:12px; }
+    .activity-item {
+      display:flex; align-items:center; gap:12px;
+      padding:10px 12px;
+      background:var(--dim);
+      border-radius:10px;
+    }
+    .activity-icon { font-size:1rem; width:30px; height:30px; border-radius:8px; display:flex; align-items:center; justify-content:center; }
+    .activity-text { flex:1; }
+    .activity-name { font-size:0.82rem; font-weight:600; }
+    .activity-time { font-size:0.7rem; color:var(--muted); }
+    .activity-val { font-size:0.82rem; font-weight:700; }
+
+    @media(max-width:800px) {
+      .kpi-row { grid-template-columns:repeat(2,1fr); }
+      .charts-row { grid-template-columns:1fr; }
+      .bottom-row { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="dashboard">
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <a href="../index.html" class="back-link">← Back</a>
+      <div>
+        <div class="page-title">Analytics <span>Dashboard</span> <span class="badge-017">UI #018</span></div>
+      </div>
+    </div>
+    <div class="period-tabs">
+      <button class="tab" onclick="setTab(this)">7D</button>
+      <button class="tab active" onclick="setTab(this)">30D</button>
+      <button class="tab" onclick="setTab(this)">90D</button>
+      <button class="tab" onclick="setTab(this)">1Y</button>
+    </div>
+  </div>
+
+  <!-- KPI Row -->
+  <div class="kpi-row">
+    <div class="kpi c1">
+      <div class="kpi-icon">👥</div>
+      <div class="kpi-label">Total Users</div>
+      <div class="kpi-value">84,291</div>
+      <div class="kpi-change up">↑ 12.4% vs last period</div>
+    </div>
+    <div class="kpi c2">
+      <div class="kpi-icon">💰</div>
+      <div class="kpi-label">Revenue</div>
+      <div class="kpi-value">$48.6K</div>
+      <div class="kpi-change up">↑ 8.1% vs last period</div>
+    </div>
+    <div class="kpi c3">
+      <div class="kpi-icon">🕒</div>
+      <div class="kpi-label">Avg. Session</div>
+      <div class="kpi-value">4m 38s</div>
+      <div class="kpi-change down">↓ 2.3% vs last period</div>
+    </div>
+    <div class="kpi c4">
+      <div class="kpi-icon">📉</div>
+      <div class="kpi-label">Bounce Rate</div>
+      <div class="kpi-value">32.7%</div>
+      <div class="kpi-change up">↑ 1.8% improvement</div>
+    </div>
+  </div>
+
+  <!-- Charts Row -->
+  <div class="charts-row">
+
+    <!-- Line Chart -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Traffic Overview</div>
+          <div class="card-sub">Visitors & Sessions — Last 30 days</div>
+        </div>
+        <div class="legend">
+          <div class="legend-item"><div class="legend-dot" style="background:#6366f1"></div>Visitors</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#06b6d4"></div>Sessions</div>
+        </div>
+      </div>
+      <div class="chart-wrap">
+        <svg viewBox="0 0 600 220" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="fillV" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#6366f1" stop-opacity="0.3"/>
+              <stop offset="100%" stop-color="#6366f1" stop-opacity="0"/>
+            </linearGradient>
+            <linearGradient id="fillS" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#06b6d4" stop-opacity="0.2"/>
+              <stop offset="100%" stop-color="#06b6d4" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <!-- Grid lines -->
+          <line x1="0" y1="44" x2="600" y2="44" stroke="#1e293b" stroke-width="1"/>
+          <line x1="0" y1="88" x2="600" y2="88" stroke="#1e293b" stroke-width="1"/>
+          <line x1="0" y1="132" x2="600" y2="132" stroke="#1e293b" stroke-width="1"/>
+          <line x1="0" y1="176" x2="600" y2="176" stroke="#1e293b" stroke-width="1"/>
+          <!-- Labels -->
+          <text x="0"   y="215" fill="#64748b" font-size="10" font-family="Space Grotesk">Jun 13</text>
+          <text x="100" y="215" fill="#64748b" font-size="10" font-family="Space Grotesk">Jun 17</text>
+          <text x="200" y="215" fill="#64748b" font-size="10" font-family="Space Grotesk">Jun 21</text>
+          <text x="300" y="215" fill="#64748b" font-size="10" font-family="Space Grotesk">Jun 25</text>
+          <text x="400" y="215" fill="#64748b" font-size="10" font-family="Space Grotesk">Jun 29</text>
+          <text x="500" y="215" fill="#64748b" font-size="10" font-family="Space Grotesk">Jul 3</text>
+          <!-- Visitors fill -->
+          <path d="M0,140 C40,130 80,100 120,90 C160,80 200,110 240,80 C280,50 320,60 360,40 C400,20 440,50 480,35 C520,20 560,30 600,25 L600,180 L0,180 Z" fill="url(#fillV)"/>
+          <!-- Sessions fill -->
+          <path d="M0,160 C40,155 80,140 120,130 C160,120 200,140 240,125 C280,110 320,120 360,100 C400,80 440,105 480,90 C520,75 560,85 600,80 L600,180 L0,180 Z" fill="url(#fillS)"/>
+          <!-- Visitors line -->
+          <path d="M0,140 C40,130 80,100 120,90 C160,80 200,110 240,80 C280,50 320,60 360,40 C400,20 440,50 480,35 C520,20 560,30 600,25" fill="none" stroke="#6366f1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- Sessions line -->
+          <path d="M0,160 C40,155 80,140 120,130 C160,120 200,140 240,125 C280,110 320,120 360,100 C400,80 440,105 480,90 C520,75 560,85 600,80" fill="none" stroke="#06b6d4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5,3"/>
+          <!-- Dots -->
+          <circle cx="360" cy="40" r="5" fill="#6366f1" stroke="#06080f" stroke-width="2"/>
+          <circle cx="360" cy="100" r="5" fill="#06b6d4" stroke="#06080f" stroke-width="2"/>
+          <!-- Tooltip box -->
+          <rect x="320" y="10" width="90" height="42" rx="8" fill="rgba(13,17,30,0.95)" stroke="#6366f1" stroke-width="1"/>
+          <text x="365" y="27" fill="#f1f5f9" font-size="9" font-family="Space Grotesk" text-anchor="middle" font-weight="700">Jun 25</text>
+          <circle cx="335" cy="36" r="3" fill="#6366f1"/>
+          <text x="341" y="39" fill="#94a3b8" font-size="8" font-family="Space Grotesk">3,241</text>
+          <circle cx="375" cy="36" r="3" fill="#06b6d4"/>
+          <text x="381" y="39" fill="#94a3b8" font-size="8" font-family="Space Grotesk">2,908</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Donut Chart -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Traffic Sources</div>
+          <div class="card-sub">Where users come from</div>
+        </div>
+      </div>
+      <div class="donut-wrap">
+        <div class="donut-svg-wrap">
+          <svg viewBox="0 0 160 160" width="160" height="160">
+            <!-- Donut segments -->
+            <circle cx="80" cy="80" r="60" fill="none" stroke="#1e293b" stroke-width="22"/>
+            <!-- Organic 42% -->
+            <circle cx="80" cy="80" r="60" fill="none" stroke="#6366f1" stroke-width="22"
+              stroke-dasharray="158.4 220" stroke-dashoffset="0" stroke-linecap="round" transform="rotate(-90 80 80)"/>
+            <!-- Direct 28% -->
+            <circle cx="80" cy="80" r="60" fill="none" stroke="#10b981" stroke-width="22"
+              stroke-dasharray="105.6 272.8" stroke-dashoffset="-161.4" stroke-linecap="round" transform="rotate(-90 80 80)"/>
+            <!-- Social 18% -->
+            <circle cx="80" cy="80" r="60" fill="none" stroke="#f59e0b" stroke-width="22"
+              stroke-dasharray="67.9 310.5" stroke-dashoffset="-267" stroke-linecap="round" transform="rotate(-90 80 80)"/>
+            <!-- Referral 12% -->
+            <circle cx="80" cy="80" r="60" fill="none" stroke="#ef4444" stroke-width="22"
+              stroke-dasharray="45.2 333.2" stroke-dashoffset="-334.9" stroke-linecap="round" transform="rotate(-90 80 80)"/>
+          </svg>
+          <div class="donut-center">
+            <div class="donut-center-val">84K</div>
+            <div class="donut-center-label">Total</div>
+          </div>
+        </div>
+        <div class="donut-list">
+          <div class="donut-row">
+            <div class="legend-dot" style="background:#6366f1;width:10px;height:10px;border-radius:3px;flex-shrink:0"></div>
+            <span class="donut-row-label">Organic</span>
+            <div class="donut-row-bar-bg"><div class="donut-row-bar" style="width:42%;background:#6366f1"></div></div>
+            <span class="donut-row-val">42%</span>
+          </div>
+          <div class="donut-row">
+            <div class="legend-dot" style="background:#10b981;width:10px;height:10px;border-radius:3px;flex-shrink:0"></div>
+            <span class="donut-row-label">Direct</span>
+            <div class="donut-row-bar-bg"><div class="donut-row-bar" style="width:28%;background:#10b981"></div></div>
+            <span class="donut-row-val">28%</span>
+          </div>
+          <div class="donut-row">
+            <div class="legend-dot" style="background:#f59e0b;width:10px;height:10px;border-radius:3px;flex-shrink:0"></div>
+            <span class="donut-row-label">Social</span>
+            <div class="donut-row-bar-bg"><div class="donut-row-bar" style="width:18%;background:#f59e0b"></div></div>
+            <span class="donut-row-val">18%</span>
+          </div>
+          <div class="donut-row">
+            <div class="legend-dot" style="background:#ef4444;width:10px;height:10px;border-radius:3px;flex-shrink:0"></div>
+            <span class="donut-row-label">Referral</span>
+            <div class="donut-row-bar-bg"><div class="donut-row-bar" style="width:12%;background:#ef4444"></div></div>
+            <span class="donut-row-val">12%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom Row -->
+  <div class="bottom-row">
+
+    <!-- Top Pages -->
+    <div class="card" style="animation-delay:0.35s">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Top Pages</div>
+          <div class="card-sub">By pageviews this period</div>
+        </div>
+      </div>
+      <div class="sparkline-row">
+        <div class="spark-item">
+          <span class="spark-label">/home</span>
+          <div class="spark-bar-wrap"><div class="spark-bar" style="width:92%;background:linear-gradient(90deg,#6366f1,#818cf8)"></div></div>
+          <span class="spark-val" style="color:#818cf8">24.1K</span>
+        </div>
+        <div class="spark-item">
+          <span class="spark-label">/pricing</span>
+          <div class="spark-bar-wrap"><div class="spark-bar" style="width:68%;background:linear-gradient(90deg,#06b6d4,#67e8f9)"></div></div>
+          <span class="spark-val" style="color:#67e8f9">17.8K</span>
+        </div>
+        <div class="spark-item">
+          <span class="spark-label">/blog</span>
+          <div class="spark-bar-wrap"><div class="spark-bar" style="width:54%;background:linear-gradient(90deg,#10b981,#34d399)"></div></div>
+          <span class="spark-val" style="color:#34d399">14.2K</span>
+        </div>
+        <div class="spark-item">
+          <span class="spark-label">/features</span>
+          <div class="spark-bar-wrap"><div class="spark-bar" style="width:41%;background:linear-gradient(90deg,#f59e0b,#fbbf24)"></div></div>
+          <span class="spark-val" style="color:#fbbf24">10.7K</span>
+        </div>
+        <div class="spark-item">
+          <span class="spark-label">/docs</span>
+          <div class="spark-bar-wrap"><div class="spark-bar" style="width:28%;background:linear-gradient(90deg,#ef4444,#f87171)"></div></div>
+          <span class="spark-val" style="color:#f87171">7.3K</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="card" style="animation-delay:0.4s">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Recent Events</div>
+          <div class="card-sub">Live activity feed</div>
+        </div>
+        <span style="font-size:0.7rem;color:var(--green);background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);border-radius:20px;padding:3px 10px;font-weight:600;">● Live</span>
+      </div>
+      <div class="activity-list">
+        <div class="activity-item">
+          <div class="activity-icon" style="background:rgba(99,102,241,0.15)">🛒</div>
+          <div class="activity-text">
+            <div class="activity-name">New Signup</div>
+            <div class="activity-time">alex@mail.com · 2 min ago</div>
+          </div>
+          <span class="activity-val" style="color:var(--green)">+1</span>
+        </div>
+        <div class="activity-item">
+          <div class="activity-icon" style="background:rgba(6,182,212,0.15)">💳</div>
+          <div class="activity-text">
+            <div class="activity-name">Purchase</div>
+            <div class="activity-time">Pro Plan · 5 min ago</div>
+          </div>
+          <span class="activity-val" style="color:var(--cyan)">$49</span>
+        </div>
+        <div class="activity-item">
+          <div class="activity-icon" style="background:rgba(245,158,11,0.15)">🔗</div>
+          <div class="activity-text">
+            <div class="activity-name">Referral Click</div>
+            <div class="activity-time">twitter.com · 9 min ago</div>
+          </div>
+          <span class="activity-val" style="color:var(--yellow)">+12</span>
+        </div>
+        <div class="activity-item">
+          <div class="activity-icon" style="background:rgba(239,68,68,0.15)">❌</div>
+          <div class="activity-text">
+            <div class="activity-name">Cancelled</div>
+            <div class="activity-time">Basic Plan · 14 min ago</div>
+          </div>
+          <span class="activity-val" style="color:var(--red)">-$9</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  function setTab(el) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+  }
+</script>
+</body>
+</html>

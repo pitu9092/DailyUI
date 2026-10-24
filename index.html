@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily UI Challenges</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-dark: #0f172a;
+      --bg-card: #1e293b;
+      --bg-glass: rgba(30, 41, 59, 0.7);
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --primary: #6366f1;
+      --border: rgba(99, 102, 241, 0.2);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      min-height: 100vh;
+      padding: 60px 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .header h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 3rem;
+      font-weight: 800;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #6366f1, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header p {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+    }
+
+    .stats {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px 32px;
+      text-align: center;
+      min-width: 160px;
+    }
+
+    .stat-value {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .stat-value.completed { color: #10b981; }
+    .stat-value.pending { color: #f59e0b; }
+
+    .stat-label {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .filters {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      padding: 10px 24px;
+      border-radius: 50px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .filter-btn.active, .filter-btn:hover {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: var(--bg-glass);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      border-color: var(--primary);
+    }
+
+    .card.completed::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: #10b981;
+    }
+
+    .card-day {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .card-title {
+      color: var(--text-secondary);
+      font-size: 1rem;
+      margin-bottom: 20px;
+      flex-grow: 1;
+    }
+
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: auto;
+    }
+
+    .card-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .action-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px 12px;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .view-btn {
+      background: rgba(99, 102, 241, 0.1);
+      color: var(--primary);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+    }
+    
+    .view-btn:hover {
+      background: var(--primary);
+      color: white;
+    }
+
+    .share-btn {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 6px;
+      border-radius: 50%;
+    }
+    
+    .share-btn:hover {
+      background: white;
+      color: black;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 50px;
+      width: max-content;
+    }
+
+    .status.completed {
+      background: rgba(16, 185, 129, 0.1);
+      color: #10b981;
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+
+    .status.pending {
+      background: rgba(245, 158, 11, 0.1);
+      color: #f59e0b;
+      border: 1px solid rgba(245, 158, 11, 0.2);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header class="header">
+      <h1>Daily UI Challenges</h1>
+      <p>Tracking 100 days of user interface design.</p>
+    </header>
+
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-value" id="totalCount">100</div>
+        <div class="stat-label">Total Days</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value completed" id="completedCount">0</div>
+        <div class="stat-label">Completed</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value pending" id="pendingCount">0</div>
+        <div class="stat-label">Pending</div>
+      </div>
+    </div>
+
+    <div class="filters">
+      <button class="filter-btn active" data-filter="all">All Days</button>
+      <button class="filter-btn" data-filter="completed">Completed</button>
+      <button class="filter-btn" data-filter="pending">Pending</button>
+    </div>
+
+    <div class="grid" id="uiGrid"></div>
+  </div>
+
+  <script>
+    const prompts = {
+      1: "Sign Up", 2: "Credit Card Checkout", 3: "Landing Page", 4: "Calculator",
+      5: "App Icon", 6: "User Profile", 7: "Settings", 8: "404 Page", 9: "Music Player",
+      10: "Social Share", 11: "Flash Message", 12: "E-Commerce Shop", 13: "Direct Messaging",
+      14: "Countdown Timer", 15: "On/Off Switch", 16: "Pop-Up / Overlay", 17: "Purchase Receipt", 18: "Analytics Chart"
+    };
+
+    // The folders that actually exist in the project directory
+    const completedDaysSet = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16, 17, 18]);
+
+    const dailyUIData = [];
+    let completedCount = 0;
+
+    for (let i = 1; i <= 100; i++) {
+      const isCompleted = completedDaysSet.has(i);
+      if (isCompleted) completedCount++;
+
+      // Formulate the folder link based on existing directories
+      let folderName = "";
+      if (i < 10) folderName = "0" + i;
+      else if (i === 10) folderName = "10";
+      else folderName = "0" + i; // 11 -> 011, 12 -> 012 etc.
+
+      dailyUIData.push({
+        day: i,
+        title: prompts[i] || "Prompt Title TBD",
+        status: isCompleted ? "completed" : "pending",
+        link: isCompleted ? folderName + '/index.html' : '#'
+      });
+    }
+
+    document.getElementById('completedCount').innerText = completedCount;
+    document.getElementById('pendingCount').innerText = 100 - completedCount;
+
+    const grid = document.getElementById('uiGrid');
+    
+    function renderGrid(filter = 'all') {
+      grid.innerHTML = '';
+      
+      dailyUIData.forEach(item => {
+        if (filter !== 'all' && item.status !== filter) return;
+        
+        const dayStr = item.day.toString().padStart(3, '0');
+        const statusText = item.status === 'completed' ? '✓ Completed' : '⏱ Pending';
+        
+        const encodedTitle = encodeURIComponent(item.title);
+        const tweetText = \`Here is my design for Daily UI #\${dayStr} - \${encodedTitle}! %23DailyUI %23UIUX\`;
+        const shareLink = \`https://twitter.com/intent/tweet?text=\${tweetText}\`;
+
+        const cardHtml = \`
+          <div class="card \${item.status}">
+            <div class="card-day">Day \${dayStr}</div>
+            <div class="card-title">\${item.title}</div>
+            <div class="card-footer">
+              <div class="status \${item.status}">\${statusText}</div>
+              \${item.status === 'completed' ? \`
+                <div class="card-actions">
+                  <a href="\${item.link}" class="action-btn view-btn">View</a>
+                  <a href="\${shareLink}" target="_blank" class="action-btn share-btn" title="Share on X">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                  </a>
+                </div>
+              \` : ''}
+            </div>
+          </div>
+        \`;
+        
+        grid.insertAdjacentHTML('beforeend', cardHtml);
+      });
+    }
+
+    // Initial render
+    renderGrid();
+
+    // Filter Logic
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderGrid(btn.dataset.filter);
+      });
+    });
+  </script>
+</body>
+</html>

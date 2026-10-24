@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - DailyUI #7</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #141414;
+            --bg-tertiary: #1e1e1e;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0a0;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --border: #262626;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            margin-bottom: 3rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.125rem;
+        }
+
+        .settings-grid {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .settings-grid {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                display: flex;
+                overflow-x: auto;
+                gap: 0.5rem;
+                padding-bottom: 0.5rem;
+            }
+            .nav-item {
+                white-space: nowrap;
+                margin-bottom: 0;
+            }
+        }
+
+        .sidebar {
+            position: sticky;
+            top: 2rem;
+            height: fit-content;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem 1rem;
+            border-radius: 8px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            margin-bottom: 0.25rem;
+            font-size: 0.9375rem;
+            cursor: pointer;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+        }
+
+        .nav-item:hover {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .nav-item.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.125rem;
+        }
+
+        .content {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid var(--border);
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .section-desc {
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+            margin-top: 0.25rem;
+        }
+
+        .setting-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.25rem;
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+            margin-bottom: 0.75rem;
+            border: 1px solid var(--border);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .setting-item:hover {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .setting-info {
+            flex: 1;
+        }
+
+        .setting-label {
+            font-weight: 500;
+            font-size: 0.9375rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .setting-desc {
+            font-size: 0.8125rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .setting-control {
+            margin-left: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .toggle {
+            position: relative;
+            width: 48px;
+            height: 26px;
+            background: var(--bg-primary);
+            border-radius: 13px;
+            cursor: pointer;
+            border: 2px solid var(--border);
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .toggle.active {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .toggle-thumb {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.2s ease;
+        }
+
+        .toggle.active .toggle-thumb {
+            transform: translateX(22px);
+        }
+
+        select {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            padding: 0.625rem 2rem 0.625rem 0.875rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23a0a0a0' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.875rem center;
+            min-width: 160px;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .btn {
+            padding: 0.625rem 1.25rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border);
+            color: var(--text-primary);
+        }
+
+        .danger-zone {
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        .danger-zone:hover {
+            border-color: var(--danger);
+        }
+
+        .version {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.8125rem;
+            padding: 2rem 0;
+            border-top: 1px solid var(--border);
+            margin-top: 2rem;
+        }
+
+        .divider {
+            height: 1px;
+            background: var(--border);
+            margin: 1.5rem 0;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.625rem;
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--accent);
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-left: 0.75rem;
+        }
+
+        .avatar-group {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), #8b5cf6);
+        }
+
+        .avatar-info h3 {
+            font-size: 0.9375rem;
+            font-weight: 500;
+        }
+
+        .avatar-info p {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        input[type="text"], input[type="password"], input[type="email"], input[type="tel"] {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 0.625rem 0.875rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-family: inherit;
+            width: 100%;
+            transition: border-color 0.2s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        input:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .input-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.8125rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.375rem;
+            font-weight: 500;
+        }
+
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        @media (max-width: 640px) {
+            .input-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .theme-options {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .theme-btn {
+            width: 80px;
+            height: 80px;
+            border-radius: 12px;
+            border: 2px solid var(--border);
+            background: var(--bg-primary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .theme-btn:hover {
+            border-color: var(--text-secondary);
+            transform: translateY(-2px);
+        }
+
+        .theme-btn.active {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+
+        .theme-icon {
+            font-size: 1.5rem;
+        }
+
+        .theme-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .theme-btn.active .theme-label {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .storage-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--bg-primary);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .storage-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), #8b5cf6);
+            border-radius: 4px;
+        }
+
+        .storage-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 0.375rem;
+        }
+
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .checkbox {
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--border);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .checkbox.checked {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .checkbox.checked::after {
+            content: '✓';
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+        }
+
+        .status-connected {
+            background: rgba(34, 197, 94, 0.1);
+            color: var(--success);
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        .connection-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .connection-left {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .connection-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            background: var(--bg-primary);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Settings</h1>
+            <p class="subtitle">Manage your account, preferences, and application settings</p>
+        </header>
+
+        <div class="settings-grid">
+            <aside class="sidebar">
+                <button class="nav-item active" data-section="account">
+                    <span class="nav-icon">👤</span>
+                    Account
+                </button>
+                <button class="nav-item" data-section="security">
+                    <span class="nav-icon">🔒</span>
+                    Security
+                </button>
+                <button class="nav-item" data-section="appearance">
+                    <span class="nav-icon">🎨</span>
+                    Appearance
+                    <span class="badge">New</span>
+                </button>
+                <button class="nav-item" data-section="notifications">
+                    <span class="nav-icon">🔔</span>
+                    Notifications
+                </button>
+                <button class="nav-item" data-section="privacy">
+                    <span class="nav-icon">🛡️</span>
+                    Privacy
+                </button>
+                <button class="nav-item" data-section="connections">
+                    <span class="nav-icon">🔗</span>
+                    Connections
+                </button>
+                <button class="nav-item" data-section="billing">
+                    <span class="nav-icon">💳</span>
+                    Billing
+                </button>
+                <button class="nav-item" data-section="about">
+                    <span class="nav-icon">ℹ️</span>
+                    About
+                </button>
+            </aside>
+
+            <main class="content">
+                <!-- Account Section -->
+                <section class="section active" id="account">
+                    <div class="section-header">
+                        <div>
+                            <h2 class="section-title">Account Settings</h2>
+                            <p class="section-desc">Manage your profile information and public data</p>
+                        </div>
+                        <button class="btn btn-primary">Save Changes</button>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="avatar-group">
+                            <div class="avatar"></div>
+                            <div class="avatar-info">
+                                <h3>Profile Photo</h3>
+                                <p>Upload a new avatar (JPG, PNG, max 5MB)</p>
+                            </div>
+                        </div>
+                        <div class="setting-control">
+                            <button class="btn btn-secondary">Change</button>
+                        </div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="input-group">
+                        <label>Display Name</label>
+                        <input type="text" value="John Doe" placeholder="Your display name">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Email Address</label>
+                        <input type="email" value="john.doe@example.com" placeholder="your@email.com">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Username</label>
+                        <input type="text" value="johndoe" disabled style="opacity: 0.6;">
+                        <p class="setting-desc" style="margin-top: 0.375rem;">Username cannot be changed</p>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Phone Number</label>
+                        <input type="tel" value="+1 (555) 123-4567" placeholder="+1 (555) 000-0000">
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Two-Factor Authentication</div>
+                            <div class="setting-desc">Add an extra layer of security to your account with 2FA</div>
+                        </div>
+                        <div class="setting-control">
+                            <button class="btn btn-secondary">Enable</button>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Delete Account</div>
+                            <div class="setting-desc">Permanently remove your account and all data</div>
+                        </div>
+                        <div class="setting-control">
+                            <button class="btn btn-secondary danger-zone">Delete</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Security Section -->
+                <section class="section" id="security">
+                    <div class="section-header">
+                        <div>
+                            <h2 class="section-title">Security</h2>
+                            <p class="section-desc">Protect your account with advanced security features</p>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Change Password</div>
+                            <div class="setting-desc">Update your password regularly to keep your account secure</div>
+                        </div>
+                        <div class="setting-control">
+                            <button class="btn btn-primary">Update</button>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Active Sessions</div>
+                            <div class="setting-desc">You're currently signed in on 2 devices</div>
+                        </div>
+                        <div class="setting-control">
+                            <button class="btn btn-secondary">Manage</button>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Login Alerts</div>
+                            <div class="setting-desc">Get notified when someone logs into your account</div>
+                        </div>
+                        <div class="setting-control">
+                            <div class="toggle active" onclick="this.classList.toggle('active')">
+                                <div class="toggle-thumb"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Suspicious Activity Detection</div>
+                            <div class="setting-desc">Automatically block unusual sign-in attempts</div>
+                        </div>
+                        <div class="setting-control">
+                            <div class="toggle active" onclick="this.classList.toggle('active')">
+                                <div class="toggle-thumb"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Biometric Authentication</div>
+                            <div class="setting-desc">Use fingerprint or face ID for faster login</div>
+                        </div>
+                        <div class="setting-control">
+                            <div class="toggle" onclick="this.classList.toggle('active')">
+                                <div class="toggle-thumb"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Appearance Section -->
+                <section class="section" id="appearance">
+                    <div class="section-header">
+                        <div>
+                            <h2 class="section-title">Appearance</h2>
+                            <p class="section-desc">Customize how DailyUI looks and feels</p>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Theme</div>
+                            <div class="setting-desc">Choose between light and dark mode</div>
+                        </div>
+                        <div class="setting-control">
+                            <div class="theme-options">
+                                <button class="theme-btn" onclick="selectTheme(this, 'dark')">
+                                    <span class="theme-icon">🌙</span>
+                                    <span class="theme-label">Dark</span>
+                                </button>
+                                <button class="theme-btn active" onclick="selectTheme(this, 'light')">
+                                    <span class="theme-icon">☀️</span>
+                                    <span class="theme-label">Light</span>
+                                </button>
+                                <button class="theme-btn" onclick="selectTheme(this, 'auto')">
+                                    <span class="theme-icon">💻</span>
+                                    <span class="theme-label">Auto</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Accent Color</div>
+                            <div class="setting-desc">Pick your preferred accent color</div>
+                        </div>
+                        <div class="setting-control">
+                            <select id="accentColor">
+                                <option value="blue">Blue (Default)</option>
+                                <option value="purple">Purple</option>
+                                <option value="green">Green</option>
+                                <option value="orange">Orange</option>
+                                <option value="pink">Pink</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Font Size</div>
+                            <div class="setting-desc">Adjust text size throughout the app</div>
+                        </div>
+                        <div class="setting-control">
+                            <select id="fontSize">
+                                <option value="small">Small</option>
+                                <option value="medium" selected>Medium</option>
+                                <option value="large">Large</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Reduce Motion</div>
+                            <div class="setting-desc">Minimize animations and transitions</div>
+                        </div>
+                        <div class="setting-control">
+                            <div class="toggle" onclick="this.classList.toggle('active')">
+                                <div class="toggle-thumb"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Notifications Section -->
+                <section class="section" id="notifications">
+                    <div class="section-header">
+                        <div>
+                            <h2 class="section-title">Notifications</h2>
+                            <p class="section-desc">Control how and when you receive notifications</p>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Push Notifications</div>
+                            <div class="setting-desc">Receive notifications on your device</div>
+                        </div>
+                        <div class="setting-control">
+                            <div class="toggle active" onclick="this.classList.toggle('active')">
+                                <div class="toggle-thumb"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Email Notifications</div>
+                            <div class="setting-desc">Get updates delivered to your inbox</div>
+                        </div>
+                        <div class="setting-control">
+                            <div class="toggle" onclick="this.classList.toggle('active')">
+                                <div class="toggle-thumb"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Sound Effects</div>
+                            <div class="setting-desc">Play sounds for interactions and alerts</div>
+                        </div>
+                        <div class="setting-control">
+                            <div class="toggle active" onclick="this.classList.toggle('active')">
+                                <div class="toggle-thumb"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Weekly Digest</div>
+                            <div class="setting-desc">Receive a summary of your activity every Monday</div>
+                        </div>
+                        <div class="setting-control">
+                            <div class="toggle active" onclick="this.classList.toggle('active')">
+                                <div class="toggle-thumb"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Privacy Section -->
+                <section class="section" id="privacy">
+                    <div class="section-header">
+                        <div>
+                            <h2 class="section-title">Privacy</h2>
+                            <p class="section-desc">Control your data and who can see your activity</p>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Private Profile</div>
+                            <div class="setting-desc">Only approved followers can see your posts</div>
+                        </div>
+                        <div class="setting-control">
+                            <div class="toggle" onclick="this.classList.toggle('active')">
+                                <div class="toggle-thumb"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Show Online Status</div>
+                            <div class="setting-desc">Let others see when you're active</div>
+                        </div>
+                        <div class="setting-control">
+                            <div class="toggle active" onclick="this.classList.toggle('active')">
+                                <div class="toggle-thumb"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Personalized Ads</div>
+                            <div class="setting-desc">Allow use of your data to show relevant ads</div>
+                        </div>
+                        <div class="setting-control">
+                            <div class="toggle" onclick="this.classList.toggle('active')">
+                                <div class="toggle-thumb"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Activity Status</div>
+                            <div class="setting-desc">Share when you're using the app</div>
+                        </div>
+                        <div class="setting-control">
+                            <div class="toggle active" onclick="this.classList.toggle('active')">
+                                <div class="toggle-thumb"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Data Export</div>
+                            <div class="setting-desc">Download a copy of your data in JSON format</div>
+                        </div>
+                        <div class="setting-control">
+                            <button class="btn btn-secondary">Export</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Connections Section -->
+                <section class="section" id="connections">
+                    <div class="section-header">
+                        <div>
+                            <h2 class="section-title">Connected Services</h2>
+                            <p class="section-desc">Manage third-party integrations and connected apps</p>
+                        </div>
+                    </div>
+
+                    <div class="setting-item connection-item">
+                        <div class="connection-left">
+                            <div class="connection-icon" style="background: #1DA1F2;">𝕏</div>
+                            <div>
+                                <div class="setting-label">X (Twitter)</div>
+                                <div class="setting-desc">Connected as @johndoe</div>
+                            </div>
+                        </div>
+                        <div class="setting-control">
+                            <span class="status-indicator status-connected">
+                                <span class="status-dot"></span>
+                                Connected
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="setting-item connection-item">
+                        <div class="connection-left">
+                            <div class="connection-icon" style="background: #0A66C2;">in</div>
+                            <div>
+                                <div class="setting-label">LinkedIn</div>
+                                <div class="setting-desc">Not connected</div>
+                            </div>
+                        </div>
+                        <div class="setting-control">
+                            <button class="btn btn-secondary">Connect</button>
+                        </div>
+                    </div>
+
+                    <div class="setting-item connection-item">
+                        <div class="connection-left">
+                            <div class="connection-icon" style="background: #4285F4;">G</div>
+                            <div>
+                                <div class="setting-label">Google Calendar</div>
+                                <div class="setting-desc">Sync events and reminders</div>
+                            </div>
+                        </div>
+                        <div class="setting-control">
+                            <div class="toggle active" onclick="this.classList.toggle('active')">
+                                <div class="toggle-thumb"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="setting-item connection-item">
+                        <div class="connection-left">
+                            <div class="connection-icon" style="background: #FF5722;">D</div>
+                            <div>
+                                <div class="setting-label">Discord</div>
+                                <div class="setting-desc">Connected to Gaming Server</div>
+                            </div>
+                        </div>
+                        <div class="setting-control">
+                            <span class="status-indicator status-connected">
+                                <span class="status-dot"></span>
+                                Connected
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="setting-item connection-item">
+                        <div class="connection-left">
+                            <div class="connection-icon" style="background: #8B5CF6;">S</div>
+                            <div>
+                                <div class="setting-label">Spotify</div>
+                                <div class="setting-desc">Share listening activity</div>
+                            </div>
+                        </div>
+                        <div class="setting-control">
+                            <button class="btn btn-secondary">Connect</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Billing Section -->
+                <section class="section" id="billing">
+                    <div class="section-header">
+                        <div>
+                            <h2 class="section-title">Billing & Subscription</h2>
+                            <p class="section-desc">Manage your payment methods and subscription</p>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Current Plan</div>
+                            <div class="setting-desc">You're on the <strong>Pro Plan</strong> - $9.99/month</div>
+                        </div>
+                        <div class="setting-control">
+                            <button class="btn btn-secondary">Upgrade</button>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Payment Method</div>
+                            <div class="setting-desc">Visa ending in 4242 • Expires 12/25</div>
+                        </div>
+                        <div class="setting-control">
+                            <button class="btn btn-secondary">Update</button>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Billing History</div>
+                            <div class="setting-desc">Download past invoices and receipts</div>
+                        </div>
+                        <div class="setting-control">
+                            <button class="btn btn-secondary">View</button>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Auto-Renewal</div>
+                            <div class="setting-desc">Automatically renew your subscription</div>
+                        </div>
+                        <div class="setting-control">
+                            <div class="toggle active" onclick="this.classList.toggle('active')">
+                                <div class="toggle-thumb"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="setting-item danger-zone">
+                        <div class="setting-info">
+                            <div class="setting-label">Cancel Subscription</div>
+                            <div class="setting-desc">Your access will continue until the end of your billing period</div>
+                        </div>
+                        <div class="setting-control">
+                            <button class="btn btn-secondary">Cancel</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- About Section -->
+                <section class="section" id="about">
+                    <div class="section-header">
+                        <div>
+                            <h2 class="section-title">About</h2>
+                            <p class="section-desc">App information and legal details</p>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Version</div>
+                            <div class="setting-desc">DailyUI Settings v2.4.0</div>
+                        </div>
+                        <div class="setting-control">
+                            <span class="status-indicator status-connected">
+                                <span class="status-dot"></span>
+                                Latest
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Storage Used</div>
+                            <div class="setting-desc">2.4 GB of 5 GB used</div>
+                        </div>
+                        <div class="setting-control">
+                            <button class="btn btn-secondary">Manage</button>
+                        </div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Terms of Service</div>
+                        </div>
+                        <div class="setting-control">
+                            <button class="btn btn-secondary">Read</button>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Privacy Policy</div>
+                        </div>
+                        <div class="setting-control">
+                            <button class="btn btn-secondary">Read</button>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Open Source Licenses</div>
+                        </div>
+                        <div class="setting-control">
+                            <button class="btn btn-secondary">View</button>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Send Feedback</div>
+                            <div class="setting-desc">Help us improve the app</div>
+                        </div>
+                        <div class="setting-control">
+                            <button class="btn btn-primary">Feedback</button>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+
+        <div class="version">
+            <p>DailyUI #7 - Settings Designed with ❤️ #DailyUI</p>
+        </div>
+    </div>
+
+    <script>
+        function selectTheme(btn, theme) {
+            document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            console.log('Theme selected:', theme);
+        }
+
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const targetSection = item.getAttribute('data-section');
+                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+                item.classList.add('active');
+                document.getElementById(targetSection).classList.add('active');
+            });
+        });
+
+        document.querySelectorAll('.toggle').forEach(toggle => {
+            toggle.addEventListener('click', function() {
+                this.classList.toggle('active');
+            });
+        });
+    </script>
+</body>
+</html>

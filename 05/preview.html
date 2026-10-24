@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WeatherWise Icon Preview</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a, #1a1a2e);
+            color: #fff;
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #38bdf8, #fbbf24);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .subtitle {
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 40px;
+        }
+        .section {
+            margin-bottom: 60px;
+        }
+        .section h2 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: #38bdf8;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 10px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 24px;
+        }
+        .icon-box {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .icon-box:hover {
+            background: rgba(255,255,255,0.06);
+            border-color: #38bdf8;
+            transform: translateY(-4px);
+        }
+        .icon-box img {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: contain;
+            margin-bottom: 10px;
+            border-radius: 22%;
+            background: white;
+        }
+        .icon-label {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.7);
+        }
+        .icon-size {
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.4);
+            margin-top: 4px;
+        }
+        .dark-bg {
+            background: #000;
+        }
+        .light-bg {
+            background: #fff;
+        }
+        .dark-bg img, .light-bg img {
+            border-radius: 22%;
+        }
+        .bg-label {
+            display: block;
+            font-size: 0.7rem;
+            color: #38bdf8;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .footer {
+            margin-top: 80px;
+            text-align: center;
+            color: rgba(255,255,255,0.4);
+            font-size: 0.85rem;
+        }
+        .footer a {
+            color: #38bdf8;
+            text-decoration: none;
+        }
+        /* iOS Grid Layout */
+        .ios-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 16px;
+        }
+        .ios-icon {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+        }
+        .ios-icon img {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: contain;
+            border-radius: 22%;
+            background: white;
+        }
+        .ios-icon .label {
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.5);
+            margin-top: 6px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>WeatherWise Icon Preview</h1>
+        <p class="subtitle">Visual verification of all generated icon sizes and variants</p>
+
+        <!-- Main Icon -->
+        <section class="section">
+            <h2>Primary Icon (SVG)</h2>
+            <div class="grid">
+                <div class="icon-box">
+                    <div class="bg-label">Animated SVG</div>
+                    <img src="weatherwise-icon.svg" alt="WeatherWise Icon 512px" style="width: 150px; height: 150px;">
+                    <div class="icon-label">weatherwise-icon.svg</div>
+                    <div class="icon-size">512×512 (vector)</div>
+                </div>
+                <div class="icon-box">
+                    <div class="bg-label">iOS App Store</div>
+                    <img src="weatherwise-icon-1024-nomask.svg" alt="WeatherWise Icon 1024px" style="width: 150px; height: 150px;">
+                    <div class="icon-label">icon-1024-nomask.svg</div>
+                    <div class="icon-size">1024×1024 (square)</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Standard PNG Sizes -->
+        <section class="section">
+            <h2>Standard PNG Sizes</h2>
+            <div class="grid">
+                <div class="icon-box">
+                    <img src="sizes/1024.png" alt="1024px">
+                    <div class="icon-label">1024×1024</div>
+                    <div class="icon-size">App Store, Play Store</div>
+                </div>
+                <div class="icon-box">
+                    <img src="sizes/512.png" alt="512px">
+                    <div class="icon-label">512×512</div>
+                    <div class="icon-size">Play Store, PWA</div>
+                </div>
+                <div class="icon-box">
+                    <img src="sizes/256.png" alt="256px">
+                    <div class="icon-label">256×256</div>
+                    <div class="icon-size">Desktop apps</div>
+                </div>
+                <div class="icon-box">
+                    <img src="sizes/128.png" alt="128px">
+                    <div class="icon-label">128×128</div>
+                    <div class="icon-size">Chrome Web Store</div>
+                </div>
+                <div class="icon-box">
+                    <img src="sizes/64.png" alt="64px">
+                    <div class="icon-label">64×64</div>
+                    <div class="icon-size">Toolbar, settings</div>
+                </div>
+                <div class="icon-box">
+                    <img src="sizes/48.png" alt="48px">
+                    <div class="icon-label">48×48</div>
+                    <div class="icon-size">Browser favicon</div>
+                </div>
+                <div class="icon-box">
+                    <img src="sizes/32.png" alt="32px">
+                    <div class="icon-label">32×32</div>
+                    <div class="icon-size">Address bar</div>
+                </div>
+                <div class="icon-box">
+                    <img src="sizes/16.png" alt="16px">
+                    <div class="icon-label">16×16</div>
+                    <div class="icon-size">Classic favicon</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- iOS Icon Set -->
+        <section class="section">
+            <h2>iOS Icon Set (All Sizes)</h2>
+            <div class="ios-grid">
+                <!-- Will be populated by JavaScript to avoid repetition -->
+            </div>
+        </section>
+
+        <!-- Background Variations -->
+        <section class="section">
+            <h2>Background Contrast Test</h2>
+            <div class="grid">
+                <div class="icon-box dark-bg">
+                    <div class="bg-label">Dark Background</div>
+                    <img src="sizes/128.png" alt="On dark">
+                    <div class="icon-label">Works on dark</div>
+                </div>
+                <div class="icon-box light-bg">
+                    <div class="bg-label">Light Background</div>
+                    <img src="sizes/128.png" alt="On light">
+                    <div class="icon-label">Works on light</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Home Screen Mock -->
+        <section class="section">
+            <h2>On Home Screen</h2>
+            <div class="grid">
+                <div class="icon-box">
+                    <div style="background: rgba(255,255,255,0.05); border-radius: 22%; padding: 20px; display: inline-block;">
+                        <img src="ios-icons/icon-180.png" alt="Home screen icon" style="width: 120px; height: 120px;">
+                    </div>
+                    <div class="icon-label">iPhone Home Screen</div>
+                    <div class="icon-size">180×180</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Android Adaptive -->
+        <section class="section">
+            <h2>Android Adaptive Icons</h2>
+            <div class="grid">
+                <div class="icon-box">
+                    <div class="bg-label">Foreground</div>
+                    <img src="weatherwise-icon.svg" alt="Adaptive foreground" style="width: 120px; height: 120px; border-radius: 50%;">
+                    <div class="icon-label">foreground.svg</div>
+                </div>
+                <div class="icon-box">
+                    <div class="bg-label">Background</div>
+                    <div style="width: 120px; height: 120px; border-radius: 50%; margin: 0 auto; background: linear-gradient(135deg, #0f172a, #1e40af);"></div>
+                    <div class="icon-label">background.svg</div>
+                </div>
+                <div class="icon-box">
+                    <div class="bg-label">Combined (masked)</div>
+                    <div style="width: 120px; height: 120px; border-radius: 50%; overflow: hidden; margin: 0 auto; background: linear-gradient(135deg, #0f172a, #1e40af); display: flex; align-items: center; justify-content: center;">
+                        <img src="weatherwise-icon.svg" alt="Adaptive combined" style="width: 70%;">
+                    </div>
+                    <div class="icon-label">ic_launcher</div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p>WeatherWise App Icon — <a href="https://dailyui.co" target="_blank">#DailyUI</a> Challenge #005</p>
+            <p style="margin-top: 8px;">Generated with ImageMagick • <a href="APP_ICON_README.md">Documentation</a> • <a href="PRODUCTION_GUIDE.md">Production Guide</a></p>
+        </footer>
+    </div>
+
+    <script>
+        // Auto-generate iOS icon grid
+        const iosSizes = [
+            { size: 20, label: '20×20' },
+            { size: 29, label: '29×29' },
+            { size: 40, label: '40×40' },
+            { size: 60, label: '60×60' },
+            { size: 76, label: '76×76' },
+            { size: 80, label: '80×80' },
+            { size: 87, label: '87×87' },
+            { size: 120, label: '120×120' },
+            { size: 152, label: '152×152' },
+            { size: 167, label: '167×167' },
+            { size: 180, label: '180×180' },
+        ];
+
+        const iosGrid = document.querySelector('.ios-grid');
+        iosSizes.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'ios-icon';
+            div.innerHTML = `
+                <img src="ios-icons/icon-${item.size}@2x.png" alt="${item.label}"
+                     onerror="this.src='ios-icons/icon-${item.size}.png'">
+                <div class="label">${item.label}</div>
+            `;
+            iosGrid.appendChild(div);
+        });
+    </script>
+</body>
+</html>

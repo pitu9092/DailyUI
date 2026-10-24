@@ -1,0 +1,757 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Join the Movement - Community Cleanup</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Outfit:wght@600;700&display=swap"
+			rel="stylesheet"
+		/>
+		<style>
+			:root {
+			  --bg-deep: #0f0f0f;
+			  --modal-bg: #1a1a1a;
+			  --accent: #00d4aa;
+			  --accent-glow: rgba(0, 212, 170, 0.4);
+			  --coral: #ff6b6b;
+			  --text-primary: #ffffff;
+			  --text-muted: #888888;
+			  --input-bg: #252525;
+			  --input-border: #333333;
+			}
+
+			* {
+			  margin: 0;
+			  padding: 0;
+			  box-sizing: border-box;
+			}
+
+			body {
+			  font-family: 'DM Sans', sans-serif;
+			  background: var(--bg-deep);
+			  min-height: 100vh;
+			  display: flex;
+			  align-items: center;
+			  justify-content: center;
+			  overflow: hidden;
+			  position: relative;
+			}
+
+			/* Animated Background */
+			.bg-mesh {
+			  position: fixed;
+			  inset: 0;
+			  background:
+			    radial-gradient(ellipse at 20% 30%, rgba(0, 212, 170, 0.15) 0%, transparent 50%),
+			    radial-gradient(ellipse at 80% 70%, rgba(255, 107, 107, 0.1) 0%, transparent 50%),
+			    radial-gradient(ellipse at 50% 50%, rgba(100, 100, 255, 0.08) 0%, transparent 60%);
+			  animation: meshMove 20s ease-in-out infinite;
+			}
+
+			@keyframes meshMove {
+			  0%, 100% { transform: scale(1) rotate(0deg); }
+			  50% { transform: scale(1.1) rotate(2deg); }
+			}
+
+			.floating-shapes {
+			  position: fixed;
+			  inset: 0;
+			  pointer-events: none;
+			}
+
+			.shape {
+			  position: absolute;
+			  border-radius: 50%;
+			  filter: blur(60px);
+			  opacity: 0.5;
+			  animation: float 15s ease-in-out infinite;
+			}
+
+			.shape-1 {
+			  width: 300px;
+			  height: 300px;
+			  background: var(--accent);
+			  top: 10%;
+			  left: 10%;
+			  animation-delay: 0s;
+			}
+
+			.shape-2 {
+			  width: 200px;
+			  height: 200px;
+			  background: var(--coral);
+			  bottom: 20%;
+			  right: 15%;
+			  animation-delay: -5s;
+			}
+
+			.shape-3 {
+			  width: 150px;
+			  height: 150px;
+			  background: #6366f1;
+			  top: 60%;
+			  left: 60%;
+			  animation-delay: -10s;
+			}
+
+			@keyframes float {
+			  0%, 100% { transform: translateY(0) rotate(0deg); }
+			  50% { transform: translateY(-30px) rotate(10deg); }
+			}
+
+			/* Modal */
+			.modal-overlay {
+			  position: fixed;
+			  inset: 0;
+			  background: rgba(0, 0, 0, 0.7);
+			  backdrop-filter: blur(8px);
+			  display: flex;
+			  align-items: center;
+			  justify-content: center;
+			  padding: 20px;
+			  opacity: 0;
+			  visibility: hidden;
+			  transition: all 0.4s ease;
+			}
+
+			.modal-overlay.active {
+			  opacity: 1;
+			  visibility: visible;
+			}
+
+			.modal {
+			  background: var(--modal-bg);
+			  border-radius: 24px;
+			  width: 100%;
+			  max-width: 480px;
+			  max-height: 90vh;
+			  overflow-y: auto;
+			  padding: 40px;
+			  scrollbar-width: none;
+			  -ms-overflow-style: none;
+			}
+
+			.modal::-webkit-scrollbar {
+			  display: none;
+			}
+			  position: relative;
+			  box-shadow:
+			    0 0 60px var(--accent-glow),
+			    0 25px 50px rgba(0, 0, 0, 0.5);
+			  transform: scale(0.9) translateY(20px);
+			  transition: transform 0.4s ease;
+			}
+
+			.modal-overlay.active .modal {
+			  transform: scale(1) translateY(0);
+			}
+
+			.close-btn {
+			  position: absolute;
+			  top: 20px;
+			  right: 20px;
+			  width: 40px;
+			  height: 40px;
+			  border: none;
+			  background: var(--input-bg);
+			  border-radius: 12px;
+			  cursor: pointer;
+			  display: flex;
+			  align-items: center;
+			  justify-content: center;
+			  transition: all 0.2s ease;
+			}
+
+			.close-btn:hover {
+			  background: var(--input-border);
+			  transform: rotate(90deg);
+			}
+
+			.close-btn svg {
+			  width: 20px;
+			  height: 20px;
+			  stroke: var(--text-muted);
+			}
+
+			/* Modal Content */
+			.event-badge {
+			  display: inline-flex;
+			  align-items: center;
+			  gap: 8px;
+			  background: rgba(0, 212, 170, 0.15);
+			  color: var(--accent);
+			  padding: 8px 16px;
+			  border-radius: 100px;
+			  font-size: 14px;
+			  font-weight: 500;
+			  margin-bottom: 20px;
+			  animation: fadeSlideIn 0.5s ease 0.1s both;
+			}
+
+			.modal-title {
+			  font-family: 'Outfit', sans-serif;
+			  font-size: 28px;
+			  font-weight: 700;
+			  color: var(--text-primary);
+			  margin-bottom: 8px;
+			  animation: fadeSlideIn 0.5s ease 0.2s both;
+			}
+
+			.modal-subtitle {
+			  color: var(--text-muted);
+			  font-size: 16px;
+			  margin-bottom: 32px;
+			  animation: fadeSlideIn 0.5s ease 0.3s both;
+			}
+
+			@keyframes fadeSlideIn {
+			  from {
+			    opacity: 0;
+			    transform: translateY(10px);
+			  }
+			  to {
+			    opacity: 1;
+			    transform: translateY(0);
+			  }
+			}
+
+			/* Form */
+			.form {
+			  display: flex;
+			  flex-direction: column;
+			  gap: 20px;
+			}
+
+			.form-group {
+			  position: relative;
+			  animation: fadeSlideIn 0.5s ease both;
+			}
+
+			.form-group:nth-child(1) { animation-delay: 0.4s; }
+			.form-group:nth-child(2) { animation-delay: 0.5s; }
+			.form-group:nth-child(3) { animation-delay: 0.6s; }
+
+			.form-label {
+			  display: block;
+			  font-size: 14px;
+			  font-weight: 500;
+			  color: var(--text-muted);
+			  margin-bottom: 8px;
+			}
+
+			.form-input {
+			  width: 100%;
+			  padding: 10px 16px;
+			  background: var(--input-bg);
+			  border: 2px solid var(--input-border);
+			  border-radius: 12px;
+			  color: var(--text-primary);
+			  font-family: inherit;
+			  font-size: 16px;
+			  transition: all 0.2s ease;
+			}
+
+			.form-input::placeholder {
+			  color: var(--text-muted);
+			}
+
+			.form-input:focus {
+			  outline: none;
+			  border-color: var(--accent);
+			  box-shadow: 0 0 0 4px var(--accent-glow);
+			}
+
+			.form-input.error {
+			  border-color: var(--coral);
+			  box-shadow: 0 0 0 4px rgba(255, 107, 107, 0.2);
+			}
+
+			.error-msg {
+
+			  color: var(--coral);
+			  font-size: 12px;
+			  margin-top: 6px;
+			  display: none;
+			}
+
+			.form-input.error + .error-msg {
+			  display: block;
+			}
+
+			/* Select Dropdown */
+			.select-wrapper {
+			  position: relative;
+			}
+
+			.select-wrapper::after {
+			  content: '';
+			  position: absolute;
+			  right: 16px;
+			  top: 50%;
+			  transform: translateY(-50%);
+			  width: 0;
+			  height: 0;
+			  border-left: 6px solid transparent;
+			  border-right: 6px solid transparent;
+			  border-top: 6px solid var(--text-muted);
+			  pointer-events: none;
+			}
+
+			.form-select {
+			  appearance: none;
+			  width: 100%;
+			  padding: 10px 16px;
+			  padding-right: 40px;
+			  background: var(--input-bg);
+			  border: 2px solid var(--input-border);
+			  border-radius: 12px;
+			  color: var(--text-primary);
+			  font-family: inherit;
+			  font-size: 16px;
+			  cursor: pointer;
+			  transition: all 0.2s ease;
+			}
+
+			.form-select:focus {
+			  outline: none;
+			  border-color: var(--accent);
+			  box-shadow: 0 0 0 4px var(--accent-glow);
+			}
+
+			.form-select option {
+			  background: var(--modal-bg);
+			  color: var(--text-primary);
+			}
+
+			/* Interest Chips */
+			.chips-label {
+			  font-size: 14px;
+			  font-weight: 500;
+			  color: var(--text-muted);
+			  margin-bottom: 12px;
+			  display: block;
+			}
+
+			.chips-wrapper {
+			  display: flex;
+			  flex-wrap: wrap;
+			  gap: 10px;
+			}
+
+			.chip {
+			  padding: 10px 18px;
+			  background: var(--input-bg);
+			  border: 2px solid var(--input-border);
+			  border-radius: 100px;
+			  color: var(--text-muted);
+			  font-size: 14px;
+			  font-weight: 500;
+			  cursor: pointer;
+			  transition: all 0.2s ease;
+			  animation: fadeSlideIn 0.5s ease both;
+			}
+
+			.chip:nth-child(1) { animation-delay: 0.7s; }
+			.chip:nth-child(2) { animation-delay: 0.75s; }
+			.chip:nth-child(3) { animation-delay: 0.8s; }
+			.chip:nth-child(4) { animation-delay: 0.85s; }
+
+			.chip:hover {
+			  border-color: var(--accent);
+			}
+
+			.chip.active {
+			  background: rgba(0, 212, 170, 0.2);
+			  border-color: var(--accent);
+			  color: var(--accent);
+			}
+
+			/* Submit Button */
+			.submit-btn {
+			  width: 100%;
+			  padding: 18px 32px;
+			  background: var(--accent);
+			  border: none;
+			  border-radius: 12px;
+			  color: #0f0f0f;
+			  font-family: inherit;
+			  font-size: 16px;
+			  font-weight: 700;
+			  cursor: pointer;
+			  transition: all 0.2s ease;
+			  margin-top: 10px;
+			  animation: fadeSlideIn 0.5s ease 0.9s both;
+			  position: relative;
+			  overflow: hidden;
+			}
+
+			.submit-btn:hover {
+			  transform: scale(1.02);
+			  box-shadow: 0 8px 30px var(--accent-glow);
+			}
+
+			.submit-btn:active {
+			  transform: scale(0.98);
+			}
+
+			.submit-btn.loading {
+			  pointer-events: none;
+			  color: transparent;
+			}
+
+			.submit-btn.loading::after {
+			  content: '';
+			  position: absolute;
+			  width: 24px;
+			  height: 24px;
+			  top: 50%;
+			  left: 50%;
+			  margin: -12px 0 0 -12px;
+			  border: 3px solid rgba(15, 15, 15, 0.3);
+			  border-top-color: #0f0f0f;
+			  border-radius: 50%;
+			  animation: spin 0.8s linear infinite;
+			}
+
+			@keyframes spin {
+			  to { transform: rotate(360deg); }
+			}
+
+			/* Success State */
+			.success-state {
+			  display: none;
+			  text-align: center;
+			  padding: 20px 0;
+			}
+
+			.success-state.active {
+			  display: block;
+			  animation: fadeSlideIn 0.5s ease;
+			}
+
+			.success-icon {
+			  width: 80px;
+			  height: 80px;
+			  margin: 0 auto 24px;
+			  background: rgba(0, 212, 170, 0.2);
+			  border-radius: 50%;
+			  display: flex;
+			  align-items: center;
+			  justify-content: center;
+			}
+
+			.success-icon svg {
+			  width: 40px;
+			  height: 40px;
+			  stroke: var(--accent);
+			  stroke-dasharray: 100;
+			  stroke-dashoffset: 100;
+			  animation: drawCheck 0.6s ease 0.2s forwards;
+			}
+
+			@keyframes drawCheck {
+			  to { stroke-dashoffset: 0; }
+			}
+
+			.success-title {
+			  font-family: 'Outfit', sans-serif;
+			  font-size: 28px;
+			  font-weight: 700;
+			  color: var(--text-primary);
+			  margin-bottom: 8px;
+			}
+
+			.success-msg {
+			  color: var(--text-muted);
+			  font-size: 16px;
+			}
+
+			/* Confetti */
+			.confetti {
+			  position: fixed;
+			  pointer-events: none;
+			  z-index: 1000;
+			}
+
+			.confetti-piece {
+			  position: absolute;
+			  width: 10px;
+			  height: 10px;
+			  opacity: 0;
+			}
+
+			/* Mobile Responsive */
+			@media (max-width: 600px) {
+			  .modal {
+			    padding: 28px;
+			    border-radius: 20px;
+			  }
+
+			  .modal-title {
+			    font-size: 24px;
+			  }
+
+			  .chip {
+			    padding: 8px 14px;
+			    font-size: 13px;
+			  }
+			}
+		</style>
+	</head>
+	<body>
+		<div class="bg-mesh"></div>
+		<div class="floating-shapes">
+			<div class="shape shape-1"></div>
+			<div class="shape shape-2"></div>
+			<div class="shape shape-3"></div>
+		</div>
+
+		<div class="modal-overlay active">
+			<div class="modal" role="dialog" aria-modal="true">
+				<button class="close-btn" aria-label="Close modal">
+					<svg
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke-width="2"
+						stroke-linecap="round"
+					>
+						<line x1="18" y1="6" x2="6" y2="18"></line>
+						<line x1="6" y1="6" x2="18" y2="18"></line>
+					</svg>
+				</button>
+
+				<div class="modal-content">
+					<div class="event-badge">
+						<svg
+							width="16"
+							height="16"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+						>
+							<circle cx="12" cy="12" r="10"></circle>
+							<polyline points="12 6 12 12 16 14"></polyline>
+						</svg>
+						Saturday, May 15th • 9AM - 2PM
+					</div>
+
+					<h1 class="modal-title">Join the Cleanup</h1>
+					<p class="modal-subtitle">
+						Help us make Riverside Park beautiful again. Register below to
+						secure your spot!
+					</p>
+
+					<form class="form" id="signupForm">
+						<div class="form-group">
+							<label class="form-label" for="name">Full Name</label>
+							<input
+								type="text"
+								id="name"
+								class="form-input"
+								placeholder="Jane Doe"
+								required
+							/>
+							<span class="error-msg">Please enter your name</span>
+						</div>
+
+						<div class="form-group">
+							<label class="form-label" for="email">Email Address</label>
+							<input
+								type="email"
+								id="email"
+								class="form-input"
+								placeholder="jane@example.com"
+								required
+							/>
+							<span class="error-msg">Please enter a valid email</span>
+						</div>
+
+						<div class="form-group">
+							<label class="form-label" for="phone">Phone Number</label>
+							<input
+								type="tel"
+								id="phone"
+								class="form-input"
+								placeholder="(555) 123-4567"
+							/>
+						</div>
+
+						<div class="form-group">
+							<label class="chips-label">What interests you most?</label>
+							<div class="chips-wrapper">
+								<div class="chip" data-value="planting">Tree Planting</div>
+								<div class="chip" data-value="cleanup">Litter Cleanup</div>
+								<div class="chip" data-value="gardening">Community Garden</div>
+								<div class="chip" data-value="outreach">Education</div>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="form-label" for="experience"
+								>Experience Level</label
+							>
+							<div class="select-wrapper">
+								<select id="experience" class="form-select">
+									<option value="">Select your experience</option>
+									<option value="first">First time volunteer</option>
+									<option value="some">I've volunteered before</option>
+									<option value="experienced">Experienced organizer</option>
+								</select>
+							</div>
+						</div>
+
+						<button type="submit" class="submit-btn" id="submitBtn">
+							Reserve My Spot
+						</button>
+					</form>
+				</div>
+
+				<div class="success-state" id="successState">
+					<div class="success-icon">
+						<svg
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke-width="3"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+						>
+							<polyline points="20 6 9 17 4 12"></polyline>
+						</svg>
+					</div>
+					<h2 class="success-title">You're In!</h2>
+					<p class="success-msg">
+						Check your email for event details and what to bring.
+					</p>
+				</div>
+			</div>
+		</div>
+
+		<script>
+			const form = document.getElementById("signupForm");
+			const submitBtn = document.getElementById("submitBtn");
+			const chips = document.querySelectorAll(".chip");
+			const successState = document.getElementById("successState");
+			const modalContent = document.querySelector(".modal-content");
+			const closeBtn = document.querySelector(".close-btn");
+			const modalOverlay = document.querySelector(".modal-overlay");
+
+			const selectedInterests = new Set();
+
+			chips.forEach((chip) => {
+				chip.addEventListener("click", () => {
+					chip.classList.toggle("active");
+					const value = chip.dataset.value;
+					if (selectedInterests.has(value)) {
+						selectedInterests.delete(value);
+					} else {
+						selectedInterests.add(value);
+					}
+				});
+			});
+
+			form.addEventListener("submit", async (e) => {
+				e.preventDefault();
+
+				const nameInput = document.getElementById("name");
+				const emailInput = document.getElementById("email");
+
+				let isValid = true;
+
+				if (!nameInput.value.trim()) {
+					nameInput.classList.add("error");
+					isValid = false;
+				} else {
+					nameInput.classList.remove("error");
+				}
+
+				const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+				if (!emailRegex.test(emailInput.value)) {
+					emailInput.classList.add("error");
+					isValid = false;
+				} else {
+					emailInput.classList.remove("error");
+				}
+
+				if (!isValid) return;
+
+				submitBtn.classList.add("loading");
+
+				await new Promise((resolve) => setTimeout(resolve, 1500));
+
+				submitBtn.classList.remove("loading");
+				modalContent.style.display = "none";
+				successState.classList.add("active");
+
+				createConfetti();
+			});
+
+			document.querySelectorAll(".form-input").forEach((input) => {
+				input.addEventListener("input", () => {
+					input.classList.remove("error");
+				});
+			});
+
+			closeBtn.addEventListener("click", () => {
+				modalOverlay.classList.remove("active");
+			});
+
+			modalOverlay.addEventListener("click", (e) => {
+				if (e.target === modalOverlay) {
+					modalOverlay.classList.remove("active");
+				}
+			});
+
+			document.addEventListener("keydown", (e) => {
+				if (e.key === "Escape") {
+					modalOverlay.classList.remove("active");
+				}
+			});
+
+			function createConfetti() {
+				const colors = ["#00d4aa", "#ff6b6b", "#6366f1", "#fbbf24", "#ffffff"];
+				const container = document.createElement("div");
+				container.className = "confetti";
+				document.body.appendChild(container);
+
+				for (let i = 0; i < 50; i++) {
+					const piece = document.createElement("div");
+					piece.className = "confetti-piece";
+					piece.style.background =
+						colors[Math.floor(Math.random() * colors.length)];
+					piece.style.left = Math.random() * 100 + "vw";
+					piece.style.top = "-10px";
+					piece.style.borderRadius = Math.random() > 0.5 ? "50%" : "0";
+					piece.style.transform = `rotate(${Math.random() * 360}deg)`;
+
+					const animation = piece.animate(
+						[
+							{
+								opacity: 1,
+								top: "-10px",
+								left: Math.random() * 100 + "vw",
+							},
+							{
+								opacity: 0,
+								top: "100vh",
+								left: (Math.random() - 0.5) * 50 + "vw",
+							},
+						],
+						{
+							duration: 2000 + Math.random() * 1000,
+							easing: "cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+							delay: Math.random() * 300,
+						},
+					);
+
+					container.appendChild(piece);
+				}
+
+				setTimeout(() => container.remove(), 4000);
+			}
+		</script>
+	</body>
+</html>

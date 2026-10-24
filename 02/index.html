@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Credit Card Checkout</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-light: #3b82f6;
+      --primary-dark: #1d4ed8;
+      --bg: #f1f5f9;
+      --surface: #ffffff;
+      --text: #1e293b;
+      --text-secondary: #64748b;
+      --text-muted: #94a3b8;
+      --border: #e2e8f0;
+      --border-focus: #cbd5e1;
+      --success: #10b981;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      min-height: 100vh;
+      padding: 40px 20px;
+      background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 50%, #f8fafc 100%);
+      background-size: 200% 200%;
+      animation: bgShift 8s ease infinite;
+    }
+
+    @keyframes bgShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    .checkout-wrapper {
+      width: 100%;
+      max-width: 980px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 32px;
+    }
+
+    .checkout-main {
+      background: var(--surface);
+      border-radius: 24px;
+      padding: 36px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+      animation: slideUp 0.6s ease-out;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .checkout-header {
+      margin-bottom: 28px;
+    }
+
+    .checkout-header h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .checkout-header p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    .order-summary {
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 28px;
+      animation: slideUp 0.6s ease-out 0.1s both;
+    }
+
+    .section-title {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      margin-bottom: 16px;
+    }
+
+    .order-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 14px;
+    }
+
+    .order-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .item-image {
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4); }
+      50% { transform: scale(1.02); box-shadow: 0 0 20px 0 rgba(99, 102, 241, 0.2); }
+    }
+
+    .item-image svg {
+      width: 28px;
+      height: 28px;
+      color: white;
+    }
+
+    .item-details h3 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .item-details p {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .item-price {
+      margin-left: auto;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .totals {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .total-row.final {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+      margin-top: 4px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+      animation: slideUp 0.6s ease-out 0.2s both;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 7px;
+    }
+
+    .form-group input {
+      width: 100%;
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 13px 15px;
+      font-size: 0.95rem;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      transition: all 0.3s ease;
+    }
+
+    .form-group input:hover {
+      border-color: var(--border-focus);
+      transform: translateY(-2px);
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--primary);
+      background: var(--surface);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15), 0 10px 25px rgba(37, 99, 235, 0.1);
+      transform: scale(1.02);
+    }
+
+    .form-group input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      animation: slideUp 0.6s ease-out 0.3s both;
+    }
+
+    .supported-cards {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .supported-cards span {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .card-icons {
+      display: flex;
+      gap: 6px;
+    }
+
+    .card-icon {
+      width: 38px;
+      height: 26px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.55rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      transition: all 0.3s ease;
+    }
+
+    .card-icon:hover {
+      transform: translateY(-3px) scale(1.1);
+      border-color: var(--primary);
+      box-shadow: 0 5px 15px rgba(37, 99, 235, 0.2);
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 18px;
+      padding: 14px;
+      background: var(--bg);
+      border-radius: 10px;
+      animation: slideUp 0.6s ease-out 0.4s both;
+    }
+
+    .checkbox-group input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+
+    .checkbox-group label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+
+    .submit-btn {
+      width: 100%;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      border: none;
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      animation: slideUp 0.6s ease-out 0.5s both, glow 2s ease-in-out infinite;
+    }
+
+    @keyframes glow {
+      0%, 100% { box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3); }
+      50% { box-shadow: 0 4px 25px rgba(37, 99, 235, 0.5), 0 0 40px rgba(37, 99, 235, 0.2); }
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 10px 30px rgba(37, 99, 235, 0.4);
+    }
+
+    .submit-btn:active {
+      transform: translateY(0) scale(0.98);
+    }
+
+    .submit-btn svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .secure-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 14px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      animation: slideUp 0.6s ease-out 0.6s both;
+    }
+
+    .secure-badge svg {
+      width: 14px;
+      height: 14px;
+      color: var(--success);
+      animation: shieldPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes shieldPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+
+    .checkout-sidebar {
+      position: sticky;
+      top: 40px;
+    }
+
+    .credit-card-visual {
+      background: linear-gradient(135deg, #1e293b 0%, #334155 50%, #475569 100%);
+      border-radius: 20px;
+      padding: 24px;
+      aspect-ratio: 1.58;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+      animation: floatCard 4s ease-in-out infinite, slideRight 0.8s ease-out;
+    }
+
+    @keyframes floatCard {
+      0%, 100% { transform: translateY(0) rotateX(0); }
+      50% { transform: translateY(-10px) rotateX(2deg); }
+    }
+
+    @keyframes slideRight {
+      from { opacity: 0; transform: translateX(50px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .card-shine {
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        45deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.1) 50%,
+        transparent 70%
+      );
+      animation: shine 4s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes shine {
+      0% { transform: translateX(-100%) rotate(45deg); }
+      100% { transform: translateX(100%) rotate(45deg); }
+    }
+
+    .card-visual-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .card-logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      font-style: italic;
+      color: rgba(255, 255, 255, 0.95);
+      letter-spacing: 1px;
+      animation: logoGlow 2s ease-in-out infinite;
+    }
+
+    @keyframes logoGlow {
+      0%, 100% { text-shadow: 0 0 10px rgba(255, 255, 255, 0.3); }
+      50% { text-shadow: 0 0 20px rgba(255, 255, 255, 0.6); }
+    }
+
+    .card-contactless {
+      width: 28px;
+      height: 28px;
+      border: 2px solid rgba(255, 255, 255, 0.4);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: contactlessPulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes contactlessPulse {
+      0%, 100% { opacity: 0.4; transform: scale(1); }
+      50% { opacity: 0.8; transform: scale(1.1); }
+    }
+
+    .card-contactless svg {
+      width: 14px;
+      height: 14px;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .card-chip-visual {
+      width: 40px;
+      height: 30px;
+      background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+      border-radius: 5px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-chip-visual::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.4) 50%,
+        transparent 100%
+      );
+      animation: chipShimmer 3s ease-in-out infinite;
+    }
+
+    @keyframes chipShimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    .card-number-visual {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 600;
+      letter-spacing: 2.5px;
+      color: rgba(255, 255, 255, 0.95);
+      transition: all 0.3s ease;
+    }
+
+    .card-info-visual {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .card-holder-visual {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .card-holder-visual span {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.9);
+      letter-spacing: 1px;
+      margin-top: 3px;
+    }
+
+    .card-expiry-visual {
+      text-align: right;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .card-expiry-visual span {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.9);
+      letter-spacing: 1px;
+      margin-top: 3px;
+    }
+
+    .glow-overlay {
+      position: absolute;
+      inset: 0;
+      border-radius: 20px;
+      pointer-events: none;
+      animation: cardBorderGlow 3s ease-in-out infinite;
+    }
+
+    @keyframes cardBorderGlow {
+      0%, 100% { box-shadow: inset 0 0 30px rgba(99, 102, 241, 0); }
+      50% { box-shadow: inset 0 0 30px rgba(99, 102, 241, 0.2); }
+    }
+
+    @media (max-width: 900px) {
+      .checkout-wrapper {
+        grid-template-columns: 1fr;
+        max-width: 520px;
+      }
+
+      .checkout-sidebar {
+        position: static;
+        order: -1;
+      }
+    }
+
+    @media (max-width: 520px) {
+      body {
+        padding: 16px 12px;
+      }
+
+      .checkout-main {
+        padding: 24px;
+        border-radius: 20px;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .card-number-visual {
+        font-size: 1rem;
+        letter-spacing: 1.5px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="checkout-wrapper">
+    <div class="checkout-main">
+      <div class="checkout-header">
+        <h1>Complete Payment</h1>
+        <p>Enter your card details securely below</p>
+      </div>
+
+      <div class="order-summary">
+        <div class="section-title">Order Summary</div>
+        <div class="order-item">
+          <div class="item-image">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a8 8 0 00-16 0v4M5 9h14l1 12H4L5 9z" />
+            </svg>
+          </div>
+          <div class="item-details">
+            <h3>Premium Plan</h3>
+            <p>Monthly subscription</p>
+          </div>
+          <div class="item-price">$29.00</div>
+        </div>
+        <div class="totals">
+          <div class="total-row">
+            <span>Subtotal</span>
+            <span>$29.00</span>
+          </div>
+          <div class="total-row">
+            <span>Tax</span>
+            <span>$0.00</span>
+          </div>
+          <div class="total-row final">
+            <span>Total</span>
+            <span>$29.00</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-title">Card Information</div>
+
+      <div class="supported-cards">
+        <span>We accept:</span>
+        <div class="card-icons">
+          <div class="card-icon">VISA</div>
+          <div class="card-icon">MC</div>
+          <div class="card-icon">AMEX</div>
+          <div class="card-icon">DISC</div>
+        </div>
+      </div>
+
+      <form id="checkoutForm">
+        <div class="form-group">
+          <label for="cardNumber">Card Number</label>
+          <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19">
+        </div>
+
+        <div class="form-group">
+          <label for="cardHolder">Cardholder Name</label>
+          <input type="text" id="cardHolder" placeholder="John Doe" maxlength="30">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="expiryDate">Expiry Date</label>
+            <input type="text" id="expiryDate" placeholder="MM / YY" maxlength="7">
+          </div>
+          <div class="form-group">
+            <label for="cvv">CVV</label>
+            <input type="text" id="cvv" placeholder="123" maxlength="4">
+          </div>
+        </div>
+
+        <div class="checkbox-group">
+          <input type="checkbox" id="saveCard" checked>
+          <label for="saveCard">Save card for future purchases</label>
+        </div>
+
+        <button type="submit" class="submit-btn">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
+          Pay $29.00
+        </button>
+
+        <div class="secure-badge">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+          </svg>
+          <span>Secured with 256-bit SSL encryption</span>
+        </div>
+      </form>
+    </div>
+
+    <div class="checkout-sidebar">
+      <div class="credit-card-visual">
+        <div class="glow-overlay"></div>
+        <div class="card-shine"></div>
+        <div class="card-visual-header">
+          <div class="card-logo">VISA</div>
+          <div class="card-contactless">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.383a14.406 14.406 0 01-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 10-7.517 0c.85.493 1.509 1.333 1.509 2.316V18" />
+            </svg>
+          </div>
+        </div>
+        <div class="card-chip-visual"></div>
+        <div class="card-number-visual" id="cardNumberPreview">•••• •••• •••• ••••</div>
+        <div class="card-info-visual">
+          <div class="card-holder-visual">
+            <span>Card Holder</span>
+            <div id="cardHolderPreview">YOUR NAME</div>
+          </div>
+          <div class="card-expiry-visual">
+            <span>Expires</span>
+            <div id="cardExpiryPreview">MM / YY</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const cardNumber = document.getElementById('cardNumber');
+    const cardHolder = document.getElementById('cardHolder');
+    const expiryDate = document.getElementById('expiryDate');
+    const cvv = document.getElementById('cvv');
+    const cardNumberPreview = document.getElementById('cardNumberPreview');
+    const cardHolderPreview = document.getElementById('cardHolderPreview');
+    const cardExpiryPreview = document.getElementById('cardExpiryPreview');
+
+    cardNumber.addEventListener('input', (e) => {
+      let value = e.target.value.replace(/\s/g, '').replace(/\D/g, '');
+      let formatted = '';
+      for (let i = 0; i < value.length; i++) {
+        if (i > 0 && i % 4 === 0) formatted += ' ';
+        formatted += value[i];
+      }
+      e.target.value = formatted;
+      const preview = value.padEnd(16, '•').replace(/(.{4})/g, '$1 ').trim();
+      cardNumberPreview.textContent = preview;
+    });
+
+    cardHolder.addEventListener('input', (e) => {
+      const value = e.target.value.toUpperCase();
+      e.target.value = value;
+      cardHolderPreview.textContent = value || 'YOUR NAME';
+    });
+
+    expiryDate.addEventListener('input', (e) => {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value.length >= 2) {
+        value = value.substring(0, 2) + ' / ' + value.substring(2, 4);
+      }
+      e.target.value = value;
+      cardExpiryPreview.textContent = value || 'MM / YY';
+    });
+
+    cvv.addEventListener('input', (e) => {
+      e.target.value = e.target.value.replace(/\D/g, '');
+    });
+
+    document.getElementById('checkoutForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('Payment successful! Thank you for your purchase.');
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,1218 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>LoanWise - Mortgage Calculator</title>
+		<link
+			href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap"
+			rel="stylesheet"
+		/>
+		<style>
+			:root {
+				--primary: #8b5cf6;
+				--primary-light: #a78bfa;
+				--primary-dark: #7c3aed;
+				--accent: #06b6d4;
+				--accent-light: #22d3ee;
+				--bg: #0f172a;
+				--surface: #1e293b;
+				--surface-light: #334155;
+				--surface-lighter: #475569;
+				--text: #f8fafc;
+				--text-secondary: #94a3b8;
+				--text-muted: #64748b;
+				--success: #10b981;
+				--warning: #f59e0b;
+				--danger: #ef4444;
+			}
+
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+			}
+
+			body {
+				font-family: "DM Sans", sans-serif;
+				background: var(--bg);
+				color: var(--text);
+				min-height: 100vh;
+				overflow-x: hidden;
+			}
+
+			.bg-gradient {
+				position: fixed;
+				inset: 0;
+				background:
+					radial-gradient(
+						ellipse 60% 50% at 20% 20%,
+						rgba(139, 92, 246, 0.12),
+						transparent
+					),
+					radial-gradient(
+						ellipse 50% 40% at 80% 80%,
+						rgba(6, 182, 212, 0.08),
+						transparent
+					);
+				pointer-events: none;
+				z-index: 0;
+			}
+
+			.grid-pattern {
+				position: fixed;
+				inset: 0;
+				background-image:
+					linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+					linear-gradient(
+						90deg,
+						rgba(255, 255, 255, 0.015) 1px,
+						transparent 1px
+					);
+				background-size: 50px 50px;
+				pointer-events: none;
+				z-index: 0;
+			}
+
+			.container {
+				position: relative;
+				z-index: 5;
+				max-width: 1200px;
+				margin: 0 auto;
+				padding: 48px 24px;
+			}
+
+			header {
+				text-align: center;
+				margin-bottom: 32px;
+				animation: fadeDown 0.8s ease-out;
+			}
+
+			@keyframes fadeDown {
+				from {
+					opacity: 0;
+					transform: translateY(-20px);
+				}
+				to {
+					opacity: 1;
+					transform: translateY(0);
+				}
+			}
+
+			.logo {
+				display: inline-flex;
+				align-items: center;
+				gap: 12px;
+				margin-bottom: 16px;
+			}
+
+			.logo-icon {
+				width: 48px;
+				height: 48px;
+				background: linear-gradient(
+					135deg,
+					var(--primary) 0%,
+					var(--accent) 100%
+				);
+				border-radius: 14px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				box-shadow: 0 8px 30px rgba(139, 92, 246, 0.3);
+			}
+
+			.logo-icon svg {
+				width: 26px;
+				height: 26px;
+				color: white;
+			}
+
+			.logo-text {
+				font-size: 1.8rem;
+				font-weight: 700;
+			}
+
+			header h1 {
+				font-size: 2.5rem;
+				font-weight: 700;
+				margin-bottom: 12px;
+				letter-spacing: -0.5px;
+			}
+
+			header h1 span {
+				background: linear-gradient(
+					135deg,
+					var(--primary-light) 0%,
+					var(--accent) 100%
+				);
+				-webkit-background-clip: text;
+				-webkit-text-fill-color: transparent;
+				background-clip: text;
+			}
+
+			header p {
+				font-size: 1.1rem;
+				color: var(--text-secondary);
+				max-width: 450px;
+				margin: 0 auto;
+			}
+
+			.calculator-grid {
+				display: grid;
+				grid-template-columns: 1fr 1.2fr;
+				gap: 28px;
+				animation: fadeUp 1s ease-out 0.3s both;
+			}
+
+			@keyframes fadeUp {
+				from {
+					opacity: 0;
+					transform: translateY(40px);
+				}
+				to {
+					opacity: 1;
+					transform: translateY(0);
+				}
+			}
+
+			.calc-panel {
+				background: var(--surface);
+				border-radius: 24px;
+				padding: 32px;
+				border: 1px solid var(--surface-light);
+				box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+			}
+
+			.calc-header {
+				display: flex;
+				align-items: center;
+				gap: 12px;
+				margin-bottom: 28px;
+			}
+
+			.calc-icon {
+				width: 40px;
+				height: 40px;
+				background: linear-gradient(
+					135deg,
+					var(--primary) 0%,
+					var(--primary-dark) 100%
+				);
+				border-radius: 12px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+
+			.calc-icon svg {
+				width: 20px;
+				height: 20px;
+				color: white;
+			}
+
+			.calc-title {
+				font-size: 1.2rem;
+				font-weight: 600;
+			}
+
+			.calc-subtitle {
+				font-size: 0.85rem;
+				color: var(--text-muted);
+			}
+
+			.form-group {
+				margin-bottom: 24px;
+			}
+
+			.form-group label {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				font-size: 0.85rem;
+				font-weight: 500;
+				color: var(--text-secondary);
+				margin-bottom: 10px;
+			}
+
+			.form-group label span {
+				font-size: 1rem;
+				font-weight: 600;
+				color: var(--text);
+			}
+
+			.slider-container {
+				position: relative;
+			}
+
+			.input-wrapper {
+				position: relative;
+			}
+
+			.input-prefix {
+				position: absolute;
+				left: 16px;
+				top: 50%;
+				transform: translateY(-50%);
+				color: var(--text-muted);
+				font-size: 1rem;
+				font-weight: 500;
+				z-index: 2;
+				transition: color 0.3s ease;
+			}
+
+			.input-suffix {
+				position: absolute;
+				right: 16px;
+				top: 50%;
+				transform: translateY(-50%);
+				color: var(--text-muted);
+				font-size: 0.9rem;
+				font-weight: 500;
+				z-index: 2;
+				transition: color 0.3s ease;
+			}
+
+			input[type="text"],
+			input[type="number"] {
+				width: 100%;
+				background: var(--bg);
+				border: 2px solid var(--surface-light);
+				border-radius: 12px;
+				padding: 10px 16px;
+				font-size: 1rem;
+				font-family: "DM Sans", sans-serif;
+				color: var(--text);
+				transition: all 0.3s ease;
+			}
+
+			input[type="text"]:focus,
+			input[type="number"]:focus {
+				outline: none;
+				border-color: var(--primary);
+				box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15);
+			}
+
+			input.has-prefix {
+				padding-left: 36px;
+			}
+
+			input.has-suffix {
+				padding-right: 50px;
+			}
+
+			.input-wrapper:focus-within .input-prefix {
+				color: var(--primary);
+			}
+
+			.slider-track {
+				position: relative;
+				height: 8px;
+				background: var(--surface-light);
+				border-radius: 4px;
+				margin-top: 12px;
+				cursor: pointer;
+			}
+
+			.slider-fill {
+				position: absolute;
+				left: 0;
+				top: 0;
+				height: 100%;
+				background: linear-gradient(
+					90deg,
+					var(--primary) 0%,
+					var(--accent) 100%
+				);
+				border-radius: 4px;
+				transition: width 0.1s ease;
+			}
+
+			.slider-thumb {
+				position: absolute;
+				top: 50%;
+				width: 24px;
+				height: 24px;
+				background: var(--text);
+				border-radius: 50%;
+				transform: translate(-50%, -50%);
+				box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+				cursor: grab;
+				transition:
+					transform 0.2s ease,
+					box-shadow 0.2s ease;
+			}
+
+			.slider-thumb:hover {
+				transform: translate(-50%, -50%) scale(1.15);
+				box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+			}
+
+			.slider-thumb:active {
+				cursor: grabbing;
+				transform: translate(-50%, -50%) scale(1.25);
+			}
+
+			.slider-labels {
+				display: flex;
+				justify-content: space-between;
+				margin-top: 8px;
+				font-size: 0.75rem;
+				color: var(--text-muted);
+			}
+
+			.term-buttons {
+				display: grid;
+				grid-template-columns: repeat(3, 1fr);
+				gap: 10px;
+				margin-top: 12px;
+			}
+
+			.term-btn {
+				background: var(--bg);
+				border: 2px solid var(--surface-light);
+				border-radius: 10px;
+				padding: 12px 8px;
+				font-size: 0.9rem;
+				font-weight: 600;
+				color: var(--text-secondary);
+				cursor: pointer;
+				transition: all 0.3s ease;
+				font-family: "DM Sans", sans-serif;
+			}
+
+			.term-btn:hover {
+				border-color: var(--primary);
+				color: var(--text);
+			}
+
+			.term-btn.active {
+				background: linear-gradient(
+					135deg,
+					var(--primary) 0%,
+					var(--primary-dark) 100%
+				);
+				border-color: transparent;
+				color: white;
+				box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+			}
+
+			.calc-btn {
+				width: 100%;
+				background: linear-gradient(
+					135deg,
+					var(--primary) 0%,
+					var(--primary-dark) 100%
+				);
+				border: none;
+				border-radius: 12px;
+				padding: 16px;
+				font-size: 1rem;
+				font-weight: 600;
+				color: white;
+				cursor: pointer;
+				transition: all 0.3s ease;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				gap: 10px;
+				font-family: "DM Sans", sans-serif;
+				margin-top: 28px;
+				box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
+			}
+
+			.calc-btn:hover {
+				transform: translateY(-3px);
+				box-shadow: 0 8px 30px rgba(139, 92, 246, 0.4);
+			}
+
+			.calc-btn:active {
+				transform: translateY(0);
+			}
+
+			.calc-btn svg {
+				width: 20px;
+				height: 20px;
+			}
+
+			.results-panel {
+				display: flex;
+				flex-direction: column;
+			}
+
+			.results-summary {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 16px;
+				margin-bottom: 28px;
+			}
+
+			.result-card {
+				background: var(--bg);
+				border-radius: 16px;
+				padding: 20px;
+				border: 1px solid var(--surface-light);
+				transition: all 0.3s ease;
+			}
+
+			.result-card:hover {
+				transform: translateY(-3px);
+				border-color: var(--primary);
+			}
+
+			.result-card.highlight {
+				background: linear-gradient(
+					135deg,
+					rgba(139, 92, 246, 0.15) 0%,
+					rgba(6, 182, 212, 0.1) 100%
+				);
+				border-color: var(--primary);
+			}
+
+			.result-label {
+				font-size: 0.8rem;
+				color: var(--text-muted);
+				margin-bottom: 8px;
+				text-transform: uppercase;
+				letter-spacing: 0.5px;
+				font-weight: 500;
+			}
+
+			.result-value {
+				font-size: 1.6rem;
+				font-weight: 700;
+				color: var(--text);
+			}
+
+			.result-card.highlight .result-value {
+				background: linear-gradient(
+					135deg,
+					var(--primary-light) 0%,
+					var(--accent) 100%
+				);
+				-webkit-background-clip: text;
+				-webkit-text-fill-color: transparent;
+				background-clip: text;
+			}
+
+			.result-subtext {
+				font-size: 0.75rem;
+				color: var(--text-muted);
+				margin-top: 4px;
+			}
+
+			.breakdown-section {
+				flex: 1;
+			}
+
+			.breakdown-title {
+				font-size: 0.85rem;
+				font-weight: 600;
+				color: var(--text-secondary);
+				margin-bottom: 16px;
+				text-transform: uppercase;
+				letter-spacing: 0.5px;
+			}
+
+			.breakdown-bar {
+				background: var(--bg);
+				border-radius: 12px;
+				padding: 20px;
+				border: 1px solid var(--surface-light);
+			}
+
+			.breakdown-item {
+				display: flex;
+				align-items: center;
+				gap: 12px;
+				margin-bottom: 16px;
+			}
+
+			.breakdown-item:last-child {
+				margin-bottom: 0;
+			}
+
+			.breakdown-icon {
+				width: 40px;
+				height: 40px;
+				border-radius: 10px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+
+			.breakdown-icon.principal {
+				background: rgba(139, 92, 246, 0.15);
+				color: var(--primary-light);
+			}
+
+			.breakdown-icon.interest {
+				background: rgba(6, 182, 212, 0.15);
+				color: var(--accent);
+			}
+
+			.breakdown-icon svg {
+				width: 20px;
+				height: 20px;
+			}
+
+			.breakdown-info {
+				flex: 1;
+			}
+
+			.breakdown-label {
+				font-size: 0.85rem;
+				color: var(--text-secondary);
+				margin-bottom: 6px;
+			}
+
+			.breakdown-value {
+				font-size: 1rem;
+				font-weight: 600;
+				color: var(--text);
+			}
+
+			.breakdown-percent {
+				font-size: 0.9rem;
+				font-weight: 600;
+				color: var(--text-muted);
+			}
+
+			.chart-container {
+				height: 12px;
+				background: var(--surface-light);
+				border-radius: 6px;
+				overflow: hidden;
+				display: flex;
+			}
+
+			.chart-principal {
+				background: var(--primary);
+				transition: width 0.5s ease;
+			}
+
+			.chart-interest {
+				background: var(--accent);
+				transition: width 0.5s ease;
+			}
+
+			.donut-container {
+				display: flex;
+				justify-content: center;
+				margin: 24px 0;
+			}
+
+			.donut-chart {
+				position: relative;
+				width: 160px;
+				height: 160px;
+			}
+
+			.donut-chart svg {
+				transform: rotate(-90deg);
+			}
+
+			.donut-bg {
+				fill: none;
+				stroke: var(--surface-light);
+				stroke-width: 20;
+			}
+
+			.donut-principal {
+				fill: none;
+				stroke: var(--primary);
+				stroke-width: 20;
+				stroke-linecap: round;
+				stroke-dasharray: 0 440;
+				transition: stroke-dasharray 0.8s ease;
+			}
+
+			.donut-interest {
+				fill: none;
+				stroke: var(--accent);
+				stroke-width: 20;
+				stroke-linecap: round;
+				stroke-dasharray: 0 440;
+				transition: stroke-dasharray 0.8s ease;
+			}
+
+			.donut-center {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				text-align: center;
+			}
+
+			.donut-total-label {
+				font-size: 0.7rem;
+				color: var(--text-muted);
+				text-transform: uppercase;
+				letter-spacing: 0.5px;
+			}
+
+			.donut-total-value {
+				font-size: 1.2rem;
+				font-weight: 700;
+				color: var(--text);
+			}
+
+			.legend {
+				display: flex;
+				justify-content: center;
+				gap: 24px;
+			}
+
+			.legend-item {
+				display: flex;
+				align-items: center;
+				gap: 8px;
+				font-size: 0.85rem;
+				color: var(--text-secondary);
+			}
+
+			.legend-dot {
+				width: 10px;
+				height: 10px;
+				border-radius: 50%;
+			}
+
+			.legend-dot.principal {
+				background: var(--primary);
+			}
+			.legend-dot.interest {
+				background: var(--accent);
+			}
+
+			@media (max-width: 900px) {
+				.calculator-grid {
+					grid-template-columns: 1fr;
+				}
+
+				.results-summary {
+					grid-template-columns: 1fr 1fr;
+				}
+
+				header h1 {
+					font-size: 2rem;
+				}
+			}
+
+			@media (max-width: 520px) {
+				.container {
+					padding: 24px 16px;
+				}
+
+				.calc-panel {
+					padding: 24px;
+					border-radius: 20px;
+				}
+
+				.results-summary {
+					grid-template-columns: 1fr;
+				}
+
+				header h1 {
+					font-size: 1.6rem;
+				}
+
+				.result-value {
+					font-size: 1.3rem;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div class="bg-gradient"></div>
+		<div class="grid-pattern"></div>
+
+		<div class="container">
+			<header>
+				<div class="logo">
+					<div class="logo-icon">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor"
+							stroke-width="2"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"
+							/>
+						</svg>
+					</div>
+					<span class="logo-text">LoanWise</span>
+				</div>
+				<h1>Mortgage <span>Calculator</span></h1>
+				<p>
+					Calculate your monthly payments and see the full breakdown of your
+					home loan
+				</p>
+			</header>
+
+			<div class="calculator-grid">
+				<div class="calc-panel">
+					<div class="calc-header">
+						<div class="calc-icon">
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke="currentColor"
+								stroke-width="2"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+								/>
+							</svg>
+						</div>
+						<div>
+							<div class="calc-title">Loan Details</div>
+							<div class="calc-subtitle">Enter your mortgage information</div>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label>
+							<span>Loan Amount</span>
+						</label>
+						<div class="input-wrapper">
+							<span class="input-prefix">$</span>
+							<input
+								type="text"
+								id="loanAmount"
+								class="has-prefix"
+								value="350,000"
+								placeholder="250,000"
+							/>
+						</div>
+						<div class="slider-track" id="amountSlider">
+							<div class="slider-fill" id="amountFill"></div>
+							<div class="slider-thumb" id="amountThumb"></div>
+						</div>
+						<div class="slider-labels">
+							<span>$50K</span>
+							<span>$1M</span>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label>
+							<span>Interest Rate</span>
+						</label>
+						<div class="input-wrapper">
+							<input
+								type="text"
+								id="interestRate"
+								class="has-suffix"
+								value="6.5"
+								placeholder="6.5"
+							/>
+							<span class="input-suffix">%</span>
+						</div>
+						<div class="slider-track" id="rateSlider">
+							<div class="slider-fill" id="rateFill"></div>
+							<div class="slider-thumb" id="rateThumb"></div>
+						</div>
+						<div class="slider-labels">
+							<span>2%</span>
+							<span>12%</span>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label>
+							<span>Loan Term</span>
+						</label>
+						<div class="term-buttons">
+							<button class="term-btn" data-term="15">15 Years</button>
+							<button class="term-btn active" data-term="20">20 Years</button>
+							<button class="term-btn" data-term="30">30 Years</button>
+						</div>
+					</div>
+
+					<button class="calc-btn" id="calculateBtn">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor"
+							stroke-width="2"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"
+							/>
+						</svg>
+						Calculate Payment
+					</button>
+				</div>
+
+				<div class="calc-panel results-panel">
+					<div class="calc-header">
+						<div class="calc-icon">
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke="currentColor"
+								stroke-width="2"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+								/>
+							</svg>
+						</div>
+						<div>
+							<div class="calc-title">Payment Summary</div>
+							<div class="calc-subtitle">Your estimated monthly payment</div>
+						</div>
+					</div>
+
+					<div class="results-summary">
+						<div class="result-card highlight">
+							<div class="result-label">Monthly Payment</div>
+							<div class="result-value" id="monthlyPayment">$2,362.00</div>
+							<div class="result-subtext">per month</div>
+						</div>
+						<div class="result-card">
+							<div class="result-label">Total Interest</div>
+							<div class="result-value" id="totalInterest">$216,880</div>
+							<div class="result-subtext">over life of loan</div>
+						</div>
+						<div class="result-card">
+							<div class="result-label">Total Amount</div>
+							<div class="result-value" id="totalAmount">$566,880</div>
+							<div class="result-subtext">principal + interest</div>
+						</div>
+						<div class="result-card">
+							<div class="result-label">Interest Ratio</div>
+							<div class="result-value" id="interestRatio">38%</div>
+							<div class="result-subtext">of total cost</div>
+						</div>
+					</div>
+
+					<div class="breakdown-section">
+						<div class="breakdown-title">Payment Breakdown</div>
+						<div class="breakdown-bar">
+							<div class="donut-container">
+								<div class="donut-chart">
+									<svg viewBox="0 0 160 160" width="160" height="160">
+										<circle class="donut-bg" cx="80" cy="80" r="70"></circle>
+										<circle
+											class="donut-principal"
+											id="donutPrincipal"
+											cx="80"
+											cy="80"
+											r="70"
+										></circle>
+										<circle
+											class="donut-interest"
+											id="donutInterest"
+											cx="80"
+											cy="80"
+											r="70"
+										></circle>
+									</svg>
+									<div class="donut-center">
+										<div class="donut-total-label">Total Cost</div>
+										<div class="donut-total-value" id="donutTotal">
+											$566,880
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="legend">
+								<div class="legend-item">
+									<span class="legend-dot principal"></span>
+									Principal
+								</div>
+								<div class="legend-item">
+									<span class="legend-dot interest"></span>
+									Interest
+								</div>
+							</div>
+
+							<div class="breakdown-item" style="margin-top: 20px">
+								<div class="breakdown-icon principal">
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke="currentColor"
+										stroke-width="2"
+									>
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+										/>
+									</svg>
+								</div>
+								<div class="breakdown-info">
+									<div class="breakdown-label">Principal Amount</div>
+									<div class="breakdown-value" id="principalAmount">
+										$350,000
+									</div>
+								</div>
+								<div class="breakdown-percent" id="principalPercent">62%</div>
+							</div>
+							<div class="breakdown-item">
+								<div class="breakdown-icon interest">
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke="currentColor"
+										stroke-width="2"
+									>
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+										/>
+									</svg>
+								</div>
+								<div class="breakdown-info">
+									<div class="breakdown-label">Total Interest Paid</div>
+									<div class="breakdown-value" id="breakdownInterest">
+										$216,880
+									</div>
+								</div>
+								<div class="breakdown-percent" id="interestPercent">38%</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script>
+			const loanAmountInput = document.getElementById("loanAmount");
+			const interestRateInput = document.getElementById("interestRate");
+			const termButtons = document.querySelectorAll(".term-btn");
+			const calculateBtn = document.getElementById("calculateBtn");
+
+			let loanAmount = 350000;
+			let interestRate = 6.5;
+			let loanTerm = 20;
+
+			const amountSlider = document.getElementById("amountSlider");
+			const amountFill = document.getElementById("amountFill");
+			const amountThumb = document.getElementById("amountThumb");
+
+			const rateSlider = document.getElementById("rateSlider");
+			const rateFill = document.getElementById("rateFill");
+			const rateThumb = document.getElementById("rateThumb");
+
+			function formatCurrency(value) {
+				return (
+					"$" + value.toLocaleString("en-US", { maximumFractionDigits: 0 })
+				);
+			}
+
+			function formatInput(value) {
+				return value.toLocaleString("en-US");
+			}
+
+			function parseAmount(value) {
+				return parseInt(value.replace(/,/g, "")) || 0;
+			}
+
+			function updateAmountSlider() {
+				const min = 50000;
+				const max = 1000000;
+				const percent = ((loanAmount - min) / (max - min)) * 100;
+				amountFill.style.width = percent + "%";
+				amountThumb.style.left = percent + "%";
+			}
+
+			function updateRateSlider() {
+				const min = 2;
+				const max = 12;
+				const percent = ((interestRate - min) / (max - min)) * 100;
+				rateFill.style.width = percent + "%";
+				rateThumb.style.left = percent + "%";
+			}
+
+			function calculateMortgage() {
+				const principal = loanAmount;
+				const monthlyRate = interestRate / 100 / 12;
+				const numPayments = loanTerm * 12;
+
+				let monthlyPayment;
+				if (monthlyRate === 0) {
+					monthlyPayment = principal / numPayments;
+				} else {
+					monthlyPayment =
+						(principal *
+							(monthlyRate * Math.pow(1 + monthlyRate, numPayments))) /
+						(Math.pow(1 + monthlyRate, numPayments) - 1);
+				}
+
+				const totalAmount = monthlyPayment * numPayments;
+				const totalInterest = totalAmount - principal;
+				const interestPercent = (totalInterest / totalAmount) * 100;
+				const principalPercent = (principal / totalAmount) * 100;
+
+				document.getElementById("monthlyPayment").textContent =
+					formatCurrency(monthlyPayment);
+				document.getElementById("totalInterest").textContent =
+					formatCurrency(totalInterest);
+				document.getElementById("totalAmount").textContent =
+					formatCurrency(totalAmount);
+				document.getElementById("interestRatio").textContent =
+					Math.round(interestPercent) + "%";
+				document.getElementById("principalAmount").textContent =
+					formatCurrency(principal);
+				document.getElementById("breakdownInterest").textContent =
+					formatCurrency(totalInterest);
+				document.getElementById("principalPercent").textContent =
+					Math.round(principalPercent) + "%";
+				document.getElementById("interestPercent").textContent =
+					Math.round(interestPercent) + "%";
+				document.getElementById("donutTotal").textContent =
+					formatCurrency(totalAmount);
+
+				const circumference = 2 * Math.PI * 70;
+				const principalDash = (principalPercent / 100) * circumference;
+				const interestDash = (interestPercent / 100) * circumference;
+
+				document.getElementById("donutPrincipal").style.strokeDasharray =
+					`${principalDash} ${circumference}`;
+				document.getElementById("donutInterest").style.strokeDasharray =
+					`${interestDash} ${circumference}`;
+				document.getElementById("donutInterest").style.strokeDashoffset =
+					-principalDash;
+			}
+
+			loanAmountInput.addEventListener("input", (e) => {
+				const raw = parseAmount(e.target.value);
+				loanAmount = Math.max(50000, Math.min(1000000, raw));
+				e.target.value = formatInput(loanAmount);
+				updateAmountSlider();
+				calculateMortgage();
+			});
+
+			loanAmountInput.addEventListener("blur", () => {
+				if (loanAmount < 50000) {
+					loanAmount = 50000;
+					loanAmountInput.value = formatInput(loanAmount);
+					updateAmountSlider();
+					calculateMortgage();
+				}
+			});
+
+			interestRateInput.addEventListener("input", (e) => {
+				interestRate = parseFloat(e.target.value) || 0;
+				interestRate = Math.max(2, Math.min(12, interestRate));
+				e.target.value = interestRate;
+				updateRateSlider();
+				calculateMortgage();
+			});
+
+			interestRateInput.addEventListener("blur", () => {
+				if (interestRate < 2) {
+					interestRate = 2;
+					interestRateInput.value = interestRate;
+					updateRateSlider();
+					calculateMortgage();
+				}
+			});
+
+			termButtons.forEach((btn) => {
+				btn.addEventListener("click", () => {
+					termButtons.forEach((b) => b.classList.remove("active"));
+					btn.classList.add("active");
+					loanTerm = parseInt(btn.dataset.term);
+					calculateMortgage();
+				});
+			});
+
+			calculateBtn.addEventListener("click", () => {
+				calculateBtn.style.transform = "scale(0.98)";
+				setTimeout(() => {
+					calculateBtn.style.transform = "";
+				}, 150);
+				calculateMortgage();
+			});
+
+			function setupSlider(slider, fill, thumb, onUpdate) {
+				let isDragging = false;
+
+				function updateSliderPosition(e) {
+					const rect = slider.getBoundingClientRect();
+					let x = (e.clientX || e.touches[0].clientX) - rect.left;
+					let percent = Math.max(0, Math.min(100, (x / rect.width) * 100));
+					fill.style.width = percent + "%";
+					thumb.style.left = percent + "%";
+					onUpdate(percent);
+				}
+
+				thumb.addEventListener("mousedown", (e) => {
+					isDragging = true;
+					e.preventDefault();
+				});
+
+				slider.addEventListener("click", (e) => {
+					updateSliderPosition(e);
+				});
+
+				document.addEventListener("mousemove", (e) => {
+					if (isDragging) {
+						updateSliderPosition(e);
+					}
+				});
+
+				document.addEventListener("mouseup", () => {
+					isDragging = false;
+				});
+
+				thumb.addEventListener("touchstart", (e) => {
+					isDragging = true;
+					e.preventDefault();
+				});
+
+				document.addEventListener("touchmove", (e) => {
+					if (isDragging) {
+						updateSliderPosition(e);
+					}
+				});
+
+				document.addEventListener("touchend", () => {
+					isDragging = false;
+				});
+			}
+
+			setupSlider(amountSlider, amountFill, amountThumb, (percent) => {
+				const min = 50000;
+				const max = 1000000;
+				loanAmount = Math.round((percent / 100) * (max - min) + min);
+				loanAmount = Math.round(loanAmount / 1000) * 1000;
+				loanAmountInput.value = formatInput(loanAmount);
+				calculateMortgage();
+			});
+
+			setupSlider(rateSlider, rateFill, rateThumb, (percent) => {
+				const min = 2;
+				const max = 12;
+				interestRate = (percent / 100) * (max - min) + min;
+				interestRate = Math.round(interestRate * 10) / 10;
+				interestRateInput.value = interestRate;
+				calculateMortgage();
+			});
+
+			updateAmountSlider();
+			updateRateSlider();
+			calculateMortgage();
+		</script>
+	</body>
+</html>

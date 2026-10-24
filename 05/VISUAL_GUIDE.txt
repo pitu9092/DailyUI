@@ -1,0 +1,65 @@
+</think>
+```
+WEATHERWISE ICON v2 — VISUAL GUIDE
+══════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────┐
+│                                                                 │
+│                       🔵 v1 (Original)                          │
+│                                                                 │
+│        ☀️                                         ☁️☁️☁️☁️    │
+│                                                   (crowded)     │
+│                                                                 │
+│  ✗ Sun flat             ✗ Cloud soft layered                  │
+│  ✗ Cloud pushed right   ✗ No glow effects                      │
+│  ✗ Weak composition    ✗ No depth                              │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│                                                                 │
+│                       🟢 v2 (Improved)                          │
+│                                                                 │
+│              ☀️                                                 │
+│           ╱╲╲                                                   │
+│          ╱  ╲╲                                                  │
+│         ╱    ╲                                                 │
+│        ╱══════╲═══════════════════════════════════════          │
+│       ╱                            ☁️ ☁️ ☁️ ☁️                 │
+│      ╱                        (centered, layered)              │
+│                                                                 │
+│  ✓ Radial sun glow   ✓ Glassmorphism unified                   │
+│  ✓ Cloud centered    ✓ Outer glow + inner depth               │
+│  ✓ Balanced           ✓ Glass highlight + sparkles            │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+
+══════════════════════════════════════════════════════════════════
+
+KEY IMPROVEMENTS:
+═════════════════
+
+1. COMPOSITION
+   v1: Cloud crammed right side (60-90% of canvas)
+   v2: Cloud centered-lower (60-75% from left, creates stability)
+
+2. STYLE UNIFICATION
+   v1: Mix of flat (sun) + soft (cloud) + flat (bg)
+   v2: All elements use soft gradients + glow (glassmorphism)
+
+3. DEPTH LAYERS (v2 only)
+   • Background inner shadow (subtle depth)
+   • Cloud shadow layer (3D effect)
+   • Sun radial gradient (sphere-like)
+   • Outer ambient glow (cyan tint)
+   • Glass highlight sweep (reflection)
+   • Sparkle animations (living element)
+
+4. VISUAL HIERARCHY
+   Primary: Sun (brightest, larger)
+   Secondary: Cloud (soft framing)
+   Tertiary: Sparkles (accent points)
+
+══════════════════════════════════════════════════════════════════
+See evolution.html for live side-by-side comparison
+══════════════════════════════════════════════════════════════════

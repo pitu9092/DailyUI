@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1024" height="1024" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+    <!-- WeatherWise App Icon - iOS App Store Version (v3) -->
+    <!-- 1024×1024, no rounded corners (Apple applies mask) -->
+
+    <!-- Same design as weatherwise-icon.svg but scaled up -->
+    <!-- All filters, gradients, and animations preserved -->
+
+    <defs>
+        <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#0f172a"/>
+            <stop offset="40%" style="stop-color:#1e40af"/>
+            <stop offset="100%" style="stop-color:#1e3a8a"/>
+        </linearGradient>
+        <radialGradient id="sunGrad" cx="35%" cy="35%" r="65%">
+            <stop offset="0%" style="stop-color:#fef3c7"/>
+            <stop offset="50%" style="stop-color:#fbbf24"/>
+            <stop offset="100%" style="stop-color:#f59e0b"/>
+        </radialGradient>
+        <linearGradient id="cloudGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#ffffff"/>
+            <stop offset="60%" style="stop-color:#f8fafc"/>
+            <stop offset="100%" style="stop-color:#e2e8f0"/>
+        </linearGradient>
+        <linearGradient id="glassHighlight" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:rgba(255,255,255,0.08)"/>
+            <stop offset="40%" style="stop-color:rgba(255,255,255,0.02)"/>
+            <stop offset="100%" style="stop-color:rgba(255,255,255,0)"/>
+        </linearGradient>
+        <filter id="cloudShadow">
+            <feDropShadow dx="2" dy="3" stdDeviation="4" flood-color="#000" flood-opacity="0.15"/>
+        </filter>
+        <filter id="sunGlow">
+            <feGaussianBlur stdDeviation="8" result="blur"/>
+            <feFlood flood-color="#fbbf24" flood-opacity="0.12"/>
+            <feComposite in2="blur" operator="in"/>
+            <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <filter id="atmosphere">
+            <feGaussianBlur stdDeviation="20" result="glow"/>
+            <feFlood flood-color="#38bdf8" flood-opacity="0.06"/>
+            <feComposite in2="glow" operator="in"/>
+            <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <filter id="containerDepth">
+            <feOffset dx="0" dy="2"/>
+            <feGaussianBlur stdDeviation="6" result="offsetblur"/>
+            <feComposite in="SourceAlpha" in2="offsetblur" operator="out" result="inverse"/>
+            <feFlood flood-color="black" flood-opacity="0.15"/>
+            <feComposite in="color" in2="inverse" operator="in"/>
+            <feComposite in="SourceGraphic" in2="shadow" operator="over"/>
+        </filter>
+        <filter id="rimLight">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"/>
+            <feOffset dx="0" dy="1"/>
+            <feFlood flood-color="white" flood-opacity="0.08"/>
+            <feComposite in2="blur" operator="in"/>
+            <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+    </defs>
+
+    <!-- Background (NO rounded corners for App Store) -->
+    <rect width="512" height="512" fill="url(#bgGrad)" filter="url(#containerDepth)"/>
+
+    <!-- Atmosphere glow (soft outer) -->
+    <rect width="512" height="512" fill="none" stroke="rgba(56,189,248,0.06)" stroke-width="20" filter="url(#atmosphere)"/>
+
+    <!-- Cloud group -->
+    <g filter="url(#cloudShadow)">
+        <ellipse cx="295" cy="355" rx="105" ry="40" fill="rgba(0,0,0,0.1)" opacity="0.25"/>
+        <ellipse cx="290" cy="325" rx="105" ry="58" fill="url(#cloudGrad)"/>
+        <ellipse cx="335" cy="312" rx="72" ry="52" fill="url(#cloudGrad)"/>
+        <ellipse cx="370" cy="328" rx="58" ry="46" fill="url(#cloudGrad)"/>
+        <ellipse cx="245" cy="328" rx="82" ry="50" fill="url(#cloudGrad)"/>
+        <ellipse cx="205" cy="348" rx="68" ry="44" fill="url(#cloudGrad)"/>
+        <ellipse cx="272" cy="305" rx="38" ry="18" fill="rgba(255,255,255,0.45)"/>
+        <ellipse cx="328" cy="318" rx="28" ry="16" fill="rgba(255,255,255,0.4)"/>
+    </g>
+
+    <!-- Sun -->
+    <circle cx="170" cy="170" r="85" fill="#fbbf24" opacity="0.18" filter="url(#sunGlow)"/>
+    <circle cx="170" cy="170" r="65" fill="url(#sunGrad)"/>
+    <g stroke="url(#sunGrad)" stroke-width="9" stroke-linecap="round" opacity="0.75">
+        <line x1="170" y1="85" x2="170" y2="58"/>
+        <line x1="225" y1="130" x2="250" y2="105"/>
+        <line x1="240" y1="170" x2="270" y2="170"/>
+        <line x1="225" y1="210" x2="250" y2="235"/>
+        <line x1="170" y1="255" x2="170" y2="282"/>
+        <line x1="115" y1="210" x2="90" y2="235"/>
+        <line x1="100" y1="170" x2="70" y2="170"/>
+        <line x1="115" y1="130" x2="90" y2="105"/>
+    </g>
+    <circle cx="165" cy="165" r="35" fill="rgba(255,255,255,0.25)"/>
+
+    <!-- Sparkles -->
+    <g opacity="0.85">
+        <circle cx="355" cy="115" r="6" fill="#38bdf8">
+            <animate attributeName="opacity" values="0.85;0.35;0.85" dur="2.2s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="140" cy="360" r="5.5" fill="#fbbf24">
+            <animate attributeName="opacity" values="0.75;0.25;0.75" dur="2.8s" repeatCount="indefinite" begin="0.4s"/>
+        </circle>
+        <circle cx="420" cy="250" r="4.5" fill="#38bdf8">
+            <animate attributeName="opacity" values="0.65;0.15;0.65" dur="1.9s" repeatCount="indefinite" begin="0.8s"/>
+        </circle>
+    </g>
+
+    <!-- Glass highlight -->
+    <path d="M 90 70 L 200 55 L 260 120 L 180 180 Q 130 140 90 70" fill="url(#glassHighlight)" opacity="0.25"/>
+
+    <!-- Rim light -->
+    <rect x="0" y="0" width="512" height="512" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="4" filter="url(#rimLight)"/>
+
+    <!-- Inner border -->
+    <rect x="0" y="0" width="512" height="512" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="8"/>
+</svg>

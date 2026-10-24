@@ -1,0 +1,14 @@
+# Icon package - generated files
+05/sizes/
+05/ios-icons/
+05/favicon.ico
+
+# Large binary assets (keep only SVG sources)
+*.png
+*.ico
+
+# Keep vector sources
+!weatherwise-icon.svg
+!weatherwise-icon-1024-nomask.svg
+!android-adaptive-bg.svg
+!favicon.svg
