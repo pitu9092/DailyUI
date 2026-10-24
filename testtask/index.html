@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Tech.Care Healthcare Dashboard - Patient management system for medical professionals." />
+  <title>Tech.Care | HealthCare Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <!-- ==================== HEADER / NAV ==================== -->
+  <header class="top-nav" role="banner">
+    <!-- Hamburger: only visible on mobile to open patients drawer -->
+    <button class="mobile-hamburger" id="mobile-hamburger" aria-label="Open patients list" aria-expanded="false">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <line x1="3" y1="12" x2="21" y2="12"/>
+        <line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+
+    <div class="nav-logo">
+      <img src="assets/logo.svg" alt="Tech.Care Logo" id="brand-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'" />
+      <div class="logo-fallback" style="display:none">
+        <svg width="36" height="36" viewBox="0 0 36 36" fill="none"><path d="M18 4L8 10v8c0 7 4.5 13.5 10 16 5.5-2.5 10-9 10-16v-8L18 4z" fill="#31C48D"/><path d="M15 18l-3-3 1.5-1.5L15 15l5.5-5.5L22 11l-7 7z" fill="white"/></svg>
+        <span class="logo-text"><strong>Tech</strong>.Care</span>
+      </div>
+    </div>
+
+    <nav class="nav-links" role="navigation" aria-label="Main navigation">
+      <a href="#" class="nav-item" id="nav-overview">
+        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        <span>Overview</span>
+      </a>
+      <a href="#" class="nav-item active" id="nav-patients">
+        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span>Patients</span>
+      </a>
+      <a href="#" class="nav-item" id="nav-schedule">
+        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <span>Schedule</span>
+      </a>
+      <a href="#" class="nav-item" id="nav-message">
+        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <span>Message</span>
+      </a>
+      <a href="#" class="nav-item" id="nav-transactions">
+        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        <span>Transactions</span>
+      </a>
+    </nav>
+
+    <div class="nav-profile">
+      <div class="nav-doctor-info">
+        <img src="assets/doctor.png" alt="Dr. Jose Simmons" id="doctor-avatar" class="doctor-avatar" onerror="this.src='https://ui-avatars.com/api/?name=Dr+Jose+Simmons&background=f4f4f4&color=072635&size=40'" />
+        <div class="doctor-text">
+          <span class="doctor-name">Dr. Jose Simmons</span>
+          <span class="doctor-title">General Practitioner</span>
+        </div>
+      </div>
+      <div class="nav-divider"></div>
+      <div class="nav-actions">
+        <button class="nav-icon-btn" id="settings-btn" aria-label="Settings">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </button>
+        <button class="nav-icon-btn" id="more-btn" aria-label="More options">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Drawer backdrop overlay -->
+  <div class="drawer-overlay" id="drawer-overlay" aria-hidden="true"></div>
+
+  <!-- ==================== MAIN LAYOUT ==================== -->
+  <main class="dashboard-main" role="main">
+
+    <!-- ===== LEFT SIDEBAR: PATIENTS LIST ===== -->
+    <aside class="patients-sidebar" aria-label="Patients list">
+      <div class="patients-sidebar-header">
+        <h1 class="patients-title">Patients</h1>
+        <button class="search-btn" id="search-btn" aria-label="Search patients">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+      </div>
+
+      <ul class="patients-list" id="patients-list" role="list" aria-label="Patient records">
+        <!-- Populated by JS -->
+      </ul>
+    </aside>
+
+    <!-- ===== CENTER: DIAGNOSIS HISTORY ===== -->
+    <section class="diagnosis-section" aria-label="Diagnosis history">
+      <h2 class="section-title">Diagnosis History</h2>
+
+      <!-- Blood Pressure Chart -->
+      <div class="blood-pressure-card" id="blood-pressure-card">
+        <div class="bp-card-header">
+          <h3 class="bp-card-title">Blood Pressure</h3>
+          <div class="bp-time-filter">
+            <span id="bp-time-label">Last 6 months</span>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2 3 5 7 8 3"/></svg>
+          </div>
+        </div>
+
+        <div class="bp-chart-container">
+          <div class="bp-chart-wrapper">
+            <canvas id="bloodPressureChart" aria-label="Blood pressure chart" role="img"></canvas>
+          </div>
+
+          <div class="bp-stats">
+            <div class="bp-stat-block">
+              <div class="bp-stat-indicator systolic-dot"></div>
+              <p class="bp-stat-label">Systolic</p>
+              <p class="bp-stat-value" id="systolic-value">160</p>
+              <div class="bp-stat-level">
+                <svg class="level-arrow" id="systolic-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" fill="currentColor"><path d="M6 2l5 7H1z"/></svg>
+                <span id="systolic-level-text">Higher than Average</span>
+              </div>
+            </div>
+
+            <hr class="bp-stat-divider" />
+
+            <div class="bp-stat-block">
+              <div class="bp-stat-indicator diastolic-dot"></div>
+              <p class="bp-stat-label">Diastolic</p>
+              <p class="bp-stat-value" id="diastolic-value">78</p>
+              <div class="bp-stat-level">
+                <svg class="level-arrow level-down" id="diastolic-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" fill="currentColor"><path d="M6 10L1 3h10z"/></svg>
+                <span id="diastolic-level-text">Lower than Average</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vitals Cards Row -->
+      <div class="vitals-row">
+        <!-- Respiratory Rate -->
+        <div class="vital-card vital-respiratory" id="vital-respiratory">
+          <div class="vital-icon-wrap">
+            <img src="assets/respiratory.svg" alt="" class="vital-icon" aria-hidden="true" />
+          </div>
+          <p class="vital-label">Respiratory Rate</p>
+          <p class="vital-value" id="resp-value">20 bpm</p>
+          <p class="vital-status" id="resp-status">Normal</p>
+        </div>
+
+        <!-- Temperature -->
+        <div class="vital-card vital-temperature" id="vital-temperature">
+          <div class="vital-icon-wrap">
+            <img src="assets/temperature.svg" alt="" class="vital-icon" aria-hidden="true" />
+          </div>
+          <p class="vital-label">Temperature</p>
+          <p class="vital-value" id="temp-value">98.6&deg;F</p>
+          <p class="vital-status" id="temp-status">Normal</p>
+        </div>
+
+        <!-- Heart Rate -->
+        <div class="vital-card vital-heartrate" id="vital-heartrate">
+          <div class="vital-icon-wrap">
+            <img src="assets/heartrate.svg" alt="" class="vital-icon" aria-hidden="true" />
+          </div>
+          <p class="vital-label">Heart Rate</p>
+          <p class="vital-value" id="hr-value">78 bpm</p>
+          <div class="vital-status-wrap">
+            <svg class="level-arrow level-down small" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" fill="currentColor"><path d="M6 10L1 3h10z"/></svg>
+            <p class="vital-status" id="hr-status">Lower than Average</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Diagnostic List -->
+      <div class="diagnostic-list-section">
+        <h2 class="section-title">Diagnostic List</h2>
+        <div class="diagnostic-table-wrapper">
+          <table class="diagnostic-table" id="diagnostic-table" role="table" aria-label="Diagnostic list">
+            <thead>
+              <tr>
+                <th scope="col">Problem/Diagnosis</th>
+                <th scope="col">Description</th>
+                <th scope="col">Status</th>
+              </tr>
+            </thead>
+            <tbody id="diagnostic-tbody">
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== RIGHT SIDEBAR: PATIENT PROFILE ===== -->
+    <aside class="patient-profile-sidebar" aria-label="Patient profile">
+      <div class="profile-card">
+        <!-- Patient Photo -->
+        <div class="profile-photo-wrap">
+          <img src="https://fedskillstest.ct.digital/4.png" alt="Jessica Taylor profile photo" id="patient-photo" class="profile-photo" />
+        </div>
+        <h2 class="profile-name" id="patient-name">Jessica Taylor</h2>
+
+        <!-- Patient Details -->
+        <ul class="profile-details-list" role="list">
+          <li class="profile-detail-item">
+            <div class="detail-icon-wrap">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </div>
+            <div class="detail-text">
+              <span class="detail-label">Date Of Birth</span>
+              <span class="detail-value" id="patient-dob">August 23, 1996</span>
+            </div>
+          </li>
+          <li class="profile-detail-item">
+            <div class="detail-icon-wrap">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2a5 5 0 1 0 0 10A5 5 0 0 0 12 2zm0 12c-5.33 0-8 2.67-8 4v2h16v-2c0-1.33-2.67-4-8-4z" fill="currentColor" stroke="none"/></svg>
+            </div>
+            <div class="detail-text">
+              <span class="detail-label">Gender</span>
+              <span class="detail-value" id="patient-gender">Female</span>
+            </div>
+          </li>
+          <li class="profile-detail-item">
+            <div class="detail-icon-wrap">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.56 1.09h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.09a16 16 0 0 0 5.36 5.36l.86-.86a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            </div>
+            <div class="detail-text">
+              <span class="detail-label">Contact Info.</span>
+              <span class="detail-value" id="patient-phone">(415) 555-1234</span>
+            </div>
+          </li>
+          <li class="profile-detail-item">
+            <div class="detail-icon-wrap">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.56 1.09h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.09a16 16 0 0 0 5.36 5.36l.86-.86a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            </div>
+            <div class="detail-text">
+              <span class="detail-label">Emergency Contacts</span>
+              <span class="detail-value" id="patient-emergency">(415) 555-5678</span>
+            </div>
+          </li>
+          <li class="profile-detail-item">
+            <div class="detail-icon-wrap">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <div class="detail-text">
+              <span class="detail-label">Insurance Provider</span>
+              <span class="detail-value" id="patient-insurance">Sunrise Health Assurance</span>
+            </div>
+          </li>
+        </ul>
+
+        <button class="show-all-btn" id="show-all-btn" aria-label="Show all patient information">
+          Show All Information
+        </button>
+      </div>
+
+      <!-- Lab Results -->
+      <div class="lab-results-card">
+        <h2 class="lab-results-title">Lab Results</h2>
+        <ul class="lab-results-list" id="lab-results-list" role="list" aria-label="Lab results">
+          <!-- Populated by JS -->
+        </ul>
+      </div>
+    </aside>
+
+  </main>
+
+  <!-- ==================== MOBILE BOTTOM NAV (mobile only via CSS) ==================== -->
+  <nav class="mobile-bottom-nav" id="mobile-bottom-nav" role="navigation" aria-label="Bottom navigation">
+    <a href="#" class="nav-item" id="bnav-overview" aria-label="Overview">
+      <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      <span>Overview</span>
+    </a>
+    <a href="#" class="nav-item active" id="bnav-patients" aria-label="Patients">
+      <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      <span>Patients</span>
+    </a>
+    <a href="#" class="nav-item" id="bnav-schedule" aria-label="Schedule">
+      <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      <span>Schedule</span>
+    </a>
+    <a href="#" class="nav-item" id="bnav-message" aria-label="Message">
+      <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <span>Message</span>
+    </a>
+    <a href="#" class="nav-item" id="bnav-transactions" aria-label="Transactions">
+      <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+      <span>Transactions</span>
+    </a>
+  </nav>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 48" fill="none">
+  <!-- Tech.Care logo with leaf/medical cross icon -->
+  <g transform="translate(4, 4)">
+    <!-- Left leaf (teal) -->
+    <path d="M14 4 C8 4, 4 10, 4 16 C4 28, 14 34, 20 38 C20 32, 18 22, 20 16 C21 10, 18 4, 14 4Z" fill="#31C48D"/>
+    <!-- Right leaf (blue) -->
+    <path d="M26 4 C20 4, 18 10, 20 16 C22 22, 20 32, 20 38 C26 34, 36 28, 36 16 C36 10, 32 4, 26 4Z" fill="#0093CE"/>
+    <!-- White medical cross highlight -->
+    <path d="M17 14 L23 14 L23 18 L27 18 L27 22 L23 22 L23 26 L17 26 L17 22 L13 22 L13 18 L17 18Z" fill="white" opacity="0.6"/>
+  </g>
+  <!-- Tech.Care text -->
+  <text x="52" y="30" font-family="Manrope, sans-serif" font-size="20" font-weight="700" fill="#072635" letter-spacing="-0.3">Tech</text>
+  <text x="96" y="30" font-family="Manrope, sans-serif" font-size="20" font-weight="400" fill="#072635" letter-spacing="-0.3">.Care</text>
+</svg>

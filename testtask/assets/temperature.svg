@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" fill="none">
+  <!-- Orange background circle -->
+  <circle cx="48" cy="48" r="48" fill="#FFE8D4"/>
+  <!-- Thermometer body -->
+  <rect x="42" y="14" width="12" height="44" rx="6" fill="#FF8C42"/>
+  <!-- Thermometer bulb -->
+  <circle cx="48" cy="66" r="12" fill="#FF6B35"/>
+  <!-- Mercury line -->
+  <rect x="46" y="24" width="4" height="30" rx="2" fill="#FF6B35"/>
+  <!-- Highlight shine -->
+  <rect x="44" y="18" width="3" height="28" rx="1.5" fill="rgba(255,255,255,0.4)"/>
+  <!-- Temperature marks -->
+  <line x1="54" y1="30" x2="60" y2="30" stroke="#FF8C42" stroke-width="2" stroke-linecap="round"/>
+  <line x1="54" y1="38" x2="60" y2="38" stroke="#FF8C42" stroke-width="2" stroke-linecap="round"/>
+  <line x1="54" y1="46" x2="60" y2="46" stroke="#FF8C42" stroke-width="2" stroke-linecap="round"/>
+</svg>

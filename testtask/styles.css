@@ -1,0 +1,1324 @@
+/* ============================================================
+   Tech.Care Healthcare Dashboard — styles.css
+   Pixel-perfect conversion of Adobe XD template
+   Design size: 1600 x 1195px  |  Font: Manrope
+   Color palette: #072635 (primary), #31C48D (teal-accent),
+                  #F4F0FE (bg), #E0E0E0 (border)
+   ============================================================ */
+
+/* -------------------- CSS Reset / Base -------------------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: 'Manrope', sans-serif;
+  background-color: #F6F7F8;
+  color: #072635;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* -------------------- Top Navigation -------------------- */
+.top-nav {
+  display: flex;
+  align-items: center;
+  background-color: #FFFFFF;
+  border-radius: 70px;
+  padding: 11px 32px;
+  margin: 16px 24px;
+  gap: 16px;
+  box-shadow: 0 2px 12px rgba(7, 38, 53, 0.08);
+  position: sticky;
+  top: 16px;
+  z-index: 100;
+  flex-shrink: 0;
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-right: 16px;
+  flex-shrink: 0;
+}
+
+.nav-logo img {
+  height: 48px;
+  width: auto;
+}
+
+.logo-fallback {
+  align-items: center;
+  gap: 8px;
+}
+
+.logo-text {
+  font-size: 22px;
+  font-weight: 600;
+  color: #072635;
+  letter-spacing: -0.3px;
+}
+
+/* Nav Links */
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+  justify-content: center;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 41px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #072635;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  white-space: nowrap;
+}
+
+.nav-item:hover {
+  background-color: #F1F6F8;
+}
+
+.nav-item.active {
+  background-color: #31C48D;
+  color: #072635;
+}
+
+.nav-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+/* Nav Profile */
+.nav-profile {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+  margin-left: 16px;
+}
+
+.nav-doctor-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.doctor-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.doctor-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.doctor-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #072635;
+}
+
+.doctor-title {
+  font-size: 12px;
+  font-weight: 400;
+  color: #707070;
+}
+
+.nav-divider {
+  width: 1px;
+  height: 36px;
+  background-color: #E0E0E0;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-icon-btn {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #072635;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+}
+
+.nav-icon-btn:hover {
+  background-color: #F1F6F8;
+}
+
+.nav-icon-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* -------------------- Dashboard Main Layout -------------------- */
+.dashboard-main {
+  display: grid;
+  grid-template-columns: 280px 1fr 320px;
+  flex: 1;
+  min-height: 0;
+  margin: 0 24px 24px;
+  gap: 16px;
+  /* Each column aligns to top and fills the remaining height */
+  align-items: stretch;
+  overflow: hidden;
+}
+
+/* -------------------- Patients Sidebar -------------------- */
+.patients-sidebar {
+  background-color: #FFFFFF;
+  border-radius: 16px;
+  /* Critical: sidebar fills column height and clips internally */
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  /* Fill the full column height so list can scroll inside */
+  height: 100%;
+  box-shadow: 0 2px 8px rgba(7, 38, 53, 0.04);
+}
+
+.patients-sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 20px 16px;
+  /* Never shrink — keeps header always visible */
+  flex-shrink: 0;
+}
+
+.patients-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #072635;
+}
+
+.search-btn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #072635;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.search-btn:hover {
+  background-color: #F1F6F8;
+}
+
+.search-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.patients-list {
+  /* Takes all remaining height inside sidebar and scrolls */
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+}
+
+.patients-list::-webkit-scrollbar {
+  width: 4px;
+}
+.patients-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+.patients-list::-webkit-scrollbar-thumb {
+  background-color: #D0D0D0;
+  border-radius: 2px;
+}
+
+.patient-list-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  position: relative;
+  outline: none;
+  user-select: none;
+}
+
+.patient-list-item:hover {
+  background-color: #EFF5F7;
+}
+
+.patient-list-item:focus-visible {
+  background-color: #EFF5F7;
+  box-shadow: inset 2px 0 0 #31C48D;
+}
+
+.patient-list-item.active {
+  background-color: #D8F2EA;
+}
+
+.patient-list-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.patient-list-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.patient-list-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #072635;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+.patient-list-meta {
+  font-size: 13px;
+  font-weight: 400;
+  color: #707070;
+  display: block;
+  margin-top: 2px;
+}
+
+.patient-list-more {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #707070;
+  flex-shrink: 0;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.patient-list-more:hover {
+  background-color: rgba(0,0,0,0.06);
+}
+
+.patient-list-more svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* -------------------- Diagnosis Section -------------------- */
+.diagnosis-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 4px;
+  /* Hide scrollbar — Firefox */
+  scrollbar-width: none;
+  /* Hide scrollbar — IE 10+ */
+  -ms-overflow-style: none;
+}
+
+/* Hide scrollbar — Chrome, Safari, Edge */
+.diagnosis-section::-webkit-scrollbar {
+  display: none;
+}
+
+.section-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #072635;
+  margin-bottom: 4px;
+}
+
+/* Blood Pressure Card */
+.blood-pressure-card {
+  background: linear-gradient(160deg, #EBF3FB 0%, #F4F0FE 100%);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(7, 38, 53, 0.04);
+}
+
+.bp-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.bp-card-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #072635;
+}
+
+.bp-time-filter {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #072635;
+  cursor: pointer;
+  user-select: none;
+}
+
+.bp-time-filter svg {
+  width: 14px;
+  height: 14px;
+}
+
+.bp-chart-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.bp-chart-wrapper {
+  width: 100%;
+  height: 220px;
+  position: relative;
+}
+
+.bp-chart-wrapper canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.bp-stats {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 32px;
+  align-items: flex-start;
+  padding-top: 4px;
+}
+
+.bp-stat-block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.bp-stat-indicator {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  margin-bottom: 4px;
+}
+
+.systolic-dot {
+  background-color: #C26EB4;
+}
+
+.diastolic-dot {
+  background-color: #7752A3;
+}
+
+.bp-stat-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #072635;
+}
+
+.bp-stat-value {
+  font-size: 22px;
+  font-weight: 700;
+  color: #072635;
+  line-height: 1.1;
+}
+
+.bp-stat-level {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 400;
+  color: #072635;
+}
+
+.bp-stat-divider {
+  border: none;
+  border-top: 1px solid #CBC8D4;
+  margin: 4px 0;
+}
+
+.level-arrow {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+}
+
+.level-arrow.level-up {
+  color: #FF6B6B;
+  transform: rotate(0deg);
+}
+
+.level-arrow.level-down {
+  color: #4A9B6F;
+  transform: rotate(0deg);
+}
+
+.level-arrow.small {
+  width: 10px;
+  height: 10px;
+}
+
+/* -------------------- Vitals Row -------------------- */
+.vitals-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.vital-card {
+  border-radius: 12px;
+  padding: 24px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  box-shadow: 0 2px 8px rgba(7, 38, 53, 0.04);
+}
+
+.vital-respiratory {
+  background-color: #D8F5EC;
+}
+
+.vital-temperature {
+  background-color: #FFE8D0;
+}
+
+.vital-heartrate {
+  background-color: #FFE0E0;
+}
+
+.vital-icon-wrap {
+  width: 96px;
+  height: 96px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: rgba(255,255,255,0.5);
+  margin-bottom: 8px;
+}
+
+.vital-icon {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+}
+
+.vital-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #072635;
+}
+
+.vital-value {
+  font-size: 22px;
+  font-weight: 700;
+  color: #072635;
+}
+
+.vital-status {
+  font-size: 13px;
+  font-weight: 400;
+  color: #072635;
+}
+
+.vital-status-wrap {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* -------------------- Diagnostic List -------------------- */
+.diagnostic-list-section {
+  background-color: #FFFFFF;
+  border-radius: 12px;
+  padding: 20px 24px;
+  box-shadow: 0 2px 8px rgba(7, 38, 53, 0.04);
+}
+
+.diagnostic-table-wrapper {
+  overflow-x: auto;
+  margin-top: 16px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.diagnostic-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.diagnostic-table thead tr {
+  background-color: #F6F7F8;
+}
+
+.diagnostic-table th {
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #072635;
+  text-align: left;
+  border-bottom: 1px solid #E8E8E8;
+  white-space: nowrap;
+}
+
+.diagnostic-table th:first-child {
+  width: 30%;
+}
+.diagnostic-table th:nth-child(2) {
+  width: 50%;
+}
+.diagnostic-table th:last-child {
+  width: 20%;
+}
+
+.diagnostic-table tbody tr {
+  border-bottom: 1px solid #EDEDED;
+  transition: background-color 0.15s;
+}
+
+.diagnostic-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.diagnostic-table tbody tr:hover {
+  background-color: #FAFBFC;
+}
+
+.diagnostic-table td {
+  padding: 14px 20px;
+  font-size: 14px;
+  font-weight: 400;
+  color: #072635;
+  vertical-align: middle;
+}
+
+.diagnostic-table td:first-child {
+  font-weight: 600;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.status-under-observation {
+  background-color: #FFF8E1;
+  color: #B07500;
+}
+
+.status-cured {
+  background-color: #E8F5E9;
+  color: #2E7D32;
+}
+
+.status-inactive {
+  background-color: #F3E5F5;
+  color: #6A1B9A;
+}
+
+.status-untreated {
+  background-color: #FCE4EC;
+  color: #880E4F;
+}
+
+/* -------------------- Patient Profile Sidebar -------------------- */
+.patient-profile-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  /* Hide scrollbar — Firefox */
+  scrollbar-width: none;
+  /* Hide scrollbar — IE 10+ */
+  -ms-overflow-style: none;
+}
+
+/* Hide scrollbar — Chrome, Safari, Edge */
+.patient-profile-sidebar::-webkit-scrollbar {
+  display: none;
+}
+
+.profile-card {
+  background-color: #FFFFFF;
+  border-radius: 16px;
+  padding: 24px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(7, 38, 53, 0.04);
+}
+
+.profile-photo-wrap {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: none;
+  margin-bottom: 12px;
+  flex-shrink: 0;
+}
+
+.profile-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-name {
+  font-size: 22px;
+  font-weight: 700;
+  color: #072635;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.profile-details-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.profile-detail-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.detail-icon-wrap {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #F6F7F8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.detail-icon-wrap svg {
+  width: 20px;
+  height: 20px;
+  color: #072635;
+}
+
+.detail-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.detail-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #707070;
+}
+
+.detail-value {
+  font-size: 14px;
+  font-weight: 700;
+  color: #072635;
+}
+
+/* Show All Button */
+.show-all-btn {
+  background-color: #31C48D;
+  color: #072635;
+  font-family: 'Manrope', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 12px 28px;
+  border-radius: 41px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.15s ease;
+  letter-spacing: 0.3px;
+  margin-top: 4px;
+}
+
+.show-all-btn:hover {
+  background-color: #28B07F;
+  transform: translateY(-1px);
+}
+
+.show-all-btn:active {
+  transform: translateY(0);
+}
+
+/* -------------------- Lab Results -------------------- */
+.lab-results-card {
+  background-color: #FFFFFF;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(7, 38, 53, 0.04);
+  flex: 1;
+}
+
+.lab-results-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #072635;
+  margin-bottom: 12px;
+}
+
+.lab-results-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.lab-result-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 0;
+  border-bottom: 1px solid #EDEDED;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.lab-result-item:last-child {
+  border-bottom: none;
+}
+
+.lab-result-item:hover {
+  background-color: #F8FAFB;
+  margin: 0 -8px;
+  padding-left: 8px;
+  padding-right: 8px;
+  border-radius: 6px;
+}
+
+.lab-result-name {
+  font-size: 14px;
+  font-weight: 400;
+  color: #072635;
+}
+
+.lab-result-download {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #072635;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.lab-result-download:hover {
+  background-color: #F0F0F0;
+}
+
+.lab-result-download svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* -------------------- Loading State -------------------- */
+.loading-skeleton {
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  border-radius: 4px;
+}
+
+@keyframes skeleton-pulse {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* -------------------- Scrollbar Styling -------------------- */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #D0D0D0;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: #B0B0B0;
+}
+
+/* ==================== MOBILE ELEMENTS ==================== */
+
+/* Hamburger inside the desktop nav — hidden by default, shown on mobile */
+.mobile-hamburger {
+  display: none;
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: #F6F7F8;
+  color: #072635;
+  cursor: pointer;
+  border: none;
+  flex-shrink: 0;
+  margin-right: 4px;
+}
+
+.mobile-hamburger svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Drawer overlay (backdrop) */
+.drawer-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(7, 38, 53, 0.4);
+  z-index: 200;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+
+.drawer-overlay.open {
+  display: block;
+}
+
+/* Bottom nav — hidden on desktop, shown on mobile via media query */
+.mobile-bottom-nav {
+  display: none;
+}
+
+/* ==================== RESPONSIVE BREAKPOINTS ==================== */
+
+/* ---- Large tablet: collapse right sidebar ---- */
+@media (max-width: 1280px) {
+  .dashboard-main {
+    grid-template-columns: 260px 1fr 300px;
+  }
+}
+
+@media (max-width: 1100px) {
+  .dashboard-main {
+    grid-template-columns: 240px 1fr;
+    gap: 12px;
+    margin: 0 16px 16px;
+  }
+
+  .patient-profile-sidebar {
+    display: none;
+  }
+}
+
+/* ---- Small tablet / large phone landscape ---- */
+@media (max-width: 900px) {
+  html, body {
+    height: auto;
+    overflow: auto;
+  }
+
+  .top-nav {
+    border-radius: 16px;
+    margin: 10px 16px;
+    padding: 10px 12px;
+    position: static;
+    gap: 6px;
+  }
+
+  .nav-links {
+    gap: 2px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    flex: 1;
+    justify-content: flex-start;
+  }
+  .nav-links::-webkit-scrollbar { display: none; }
+
+  .nav-item {
+    padding: 8px 12px;
+    font-size: 13px;
+    gap: 6px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* Keep text labels visible on tablet */
+  .nav-item span {
+    display: inline;
+  }
+
+  .nav-profile .doctor-text {
+    display: none;
+  }
+
+  .dashboard-main {
+    grid-template-columns: 220px 1fr;
+    gap: 12px;
+    margin: 0 16px 16px;
+    overflow: visible;
+    height: auto;
+    align-items: start;
+  }
+
+  .patients-sidebar {
+    height: auto;
+    max-height: calc(100vh - 100px);
+    position: sticky;
+    top: 10px;
+  }
+
+  .diagnosis-section {
+    height: auto;
+    overflow: visible;
+  }
+
+  .patient-profile-sidebar {
+    display: none;
+  }
+}
+
+
+/* ---- Mobile: full single-column stacked ---- */
+@media (max-width: 768px) {
+  html, body {
+    height: auto;
+    min-height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  /* ---- Mobile top nav: compact — just logo + hamburger + avatar ---- */
+  .top-nav {
+    display: flex;
+    border-radius: 0;
+    margin: 0;
+    padding: 10px 16px;
+    position: sticky;
+    top: 0;
+    z-index: 150;
+    gap: 8px;
+    box-shadow: 0 1px 6px rgba(7,38,53,0.10);
+  }
+
+  /* Show hamburger */
+  .mobile-hamburger {
+    display: flex;
+    flex-shrink: 0;
+  }
+
+  /* Hide the desktop nav links from top bar on mobile */
+  .nav-links {
+    display: none;
+  }
+
+  /* Shrink logo */
+  .nav-logo {
+    flex: 1;
+    justify-content: center;
+    margin-right: 0;
+  }
+
+  .nav-logo img {
+    height: 32px;
+  }
+
+  /* Hide doctor text but keep avatar */
+  .nav-profile .doctor-text {
+    display: none;
+  }
+
+  .nav-profile {
+    flex-shrink: 0;
+    margin-left: 0;
+    gap: 6px;
+  }
+
+  .doctor-avatar {
+    width: 34px;
+    height: 34px;
+  }
+
+  /* ---- BOTTOM NAV BAR ---- */
+  .mobile-bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 150;
+    background: #FFFFFF;
+    border-top: 1px solid #EDEDED;
+    box-shadow: 0 -4px 16px rgba(7,38,53,0.08);
+    padding: 6px 0 max(6px, env(safe-area-inset-bottom));
+  }
+
+  .mobile-bottom-nav .nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    padding: 6px 4px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 600;
+    color: #6B7280;
+    text-decoration: none;
+    transition: color 0.2s ease, background 0.2s ease;
+    white-space: nowrap;
+    margin: 0 2px;
+  }
+
+  .mobile-bottom-nav .nav-item:hover {
+    background: #F0FDF8;
+    color: #31C48D;
+  }
+
+  .mobile-bottom-nav .nav-item.active {
+    background: #E8F9F3;
+    color: #1AAF78;
+    border-radius: 12px;
+  }
+
+  .mobile-bottom-nav .nav-item span {
+    display: inline;
+    font-size: 10px;
+  }
+
+  .mobile-bottom-nav .nav-icon {
+    width: 22px;
+    height: 22px;
+  }
+
+  /* Add bottom padding to content so it's not hidden behind bottom nav */
+  .dashboard-main {
+    padding-bottom: 72px;
+  }
+
+
+  /* Main layout: single full-width column */
+  .dashboard-main {
+    display: flex;
+    flex-direction: column;
+    grid-template-columns: unset;
+    gap: 0;
+    margin: 0;
+    overflow: visible;
+    height: auto;
+    align-items: stretch;
+  }
+
+  /* ---- Left sidebar becomes a slide-in drawer ---- */
+  .patients-sidebar {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: min(320px, 85vw);
+    height: 100vh;
+    height: 100dvh;
+    z-index: 300;
+    border-radius: 0;
+    box-shadow: 4px 0 24px rgba(7,38,53,0.15);
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .patients-sidebar.drawer-open {
+    left: 0;
+  }
+
+  /* ---- Center content: natural scroll ---- */
+  .diagnosis-section {
+    height: auto;
+    overflow: visible;
+    padding: 16px;
+    gap: 12px;
+    order: 1;
+  }
+
+  /* ---- Right sidebar: shows below center content ---- */
+  .patient-profile-sidebar {
+    display: flex;
+    height: auto;
+    overflow: visible;
+    padding: 0 16px 16px;
+    order: 2;
+    gap: 12px;
+  }
+
+  /* ---- Blood pressure chart: smaller ---- */
+  .blood-pressure-card {
+    padding: 16px;
+  }
+
+  .bp-chart-wrapper {
+    height: 180px;
+  }
+
+  .bp-stat-divider {
+    display: none;
+  }
+
+  /* ---- Vitals: stack 1 column on very small or 2-col ---- */
+  .vitals-row {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  .vital-card {
+    padding: 16px 12px;
+  }
+
+  .vital-icon-wrap {
+    width: 64px;
+    height: 64px;
+  }
+
+  .vital-icon {
+    width: 44px;
+    height: 44px;
+  }
+
+  .vital-value {
+    font-size: 18px;
+  }
+
+  /* ---- Profile card: side-by-side photo + info ---- */
+  .profile-card {
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 16px;
+  }
+
+  .profile-photo-wrap {
+    width: 120px;
+    height: 120px;
+    margin-bottom: 12px;
+  }
+
+  /* ---- Section title smaller ---- */
+  .section-title {
+    font-size: 18px;
+  }
+
+  /* ---- Diagnostic table: allow horizontal scroll ---- */
+  .diagnostic-table-wrapper {
+    overflow-x: auto;
+  }
+
+  /* ---- Lab results card: full padding ---- */
+  .lab-results-card {
+    border-radius: 12px;
+  }
+}
+
+/* ---- Very small phones ---- */
+@media (max-width: 480px) {
+  .vitals-row {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .vital-card {
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 16px;
+  }
+
+  .vital-icon-wrap {
+    width: 56px;
+    height: 56px;
+    flex-shrink: 0;
+    margin-bottom: 0;
+  }
+
+  .vital-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .vital-label {
+    font-size: 13px;
+  }
+
+  .vital-value {
+    font-size: 20px;
+  }
+
+  .bp-stats {
+    flex-direction: row;
+    gap: 20px;
+  }
+
+  .nav-item {
+    padding: 6px 8px;
+  }
+}
+
